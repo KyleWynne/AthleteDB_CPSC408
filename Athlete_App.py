@@ -39,6 +39,50 @@ def insert_variables(self,query, variables): # executes a single query only
         self.connection.commit()
         print("query executed")
         
+def create_all_tables():
+    query = """
+    CREATE TABLE IF NOT EXISTS teams (
+        teamID INT AUTO_INCREMENT PRIMARY KEY,
+        team_name VARCHAR(30) NOT NULL,
+        leagueID INT NOT NULL,
+        trophies INT);"""
+        
+    query2 = """
+    CREATE TABLE IF NOT EXISTS players (
+        playerID INT AUTO_INCREMENT PRIMARY KEY,
+        player_name VARCHAR(30) NOT NULL,
+        salary INT,
+        age INT,
+        sport VARCHAR(30) NOT NULL,
+        trophies INT,
+        teamID INT NOT NULL FOREIGN KEY);"""
+    
+    query3 = """
+    CREATE TABLE IF NOT EXISTS games (
+        gameID INT AUTO_INCREMENT PRIMARY KEY,
+        team1ID INT NOT NULL FOREIGN KEY,
+        team2ID INT NOT NULL FOREIGN KEY,
+        team1_score INT NOT NULL,
+        team2_score INT NOT NULL,
+        outcome VARCHAR(30) NOT NULL);"""
+        
+    query4 = """
+    CREATE TABLE IF NOT EXISTS leagues (
+        leagueID INT AUTO_INCREMENT PRIMARY KEY,
+        league_name VARCHAR(30) NOT NULL,
+        sport VARCHAR(30) NOT NULL, 
+        country VARCHAR(30));"""
+        
+    query5 = """
+    CREATE TABLE IF NOT EXISTS trophies (
+        trophyID INT AUTO_INCREMENT PRIMARY KEY,
+        trophy_name VARCHAR(30) NOT NULL,
+        leagueID INT NOT NULL FOREIGN KEY,
+        sport VARCHAR(30) NOT NULL,
+        year YEAR,
+        player_winner_id  INT NOT NULL FOREIGN KEY,
+        team_winner_id INT NOT NULL FOREIGN KEY);"""
+        
 def destructor(self): #commit changes and close connection
         self.connection.close()
         
