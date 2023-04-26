@@ -100,9 +100,12 @@ def options(): # prints options for user to choose from
     return helper.get_choice([1,2,3,4,5,6,7])
 
 def view_all_records(): # prints all records in a table
+    #enforce joins accross at least 3 tables
     pass
 
 def query_data(): # queries data with parameters/filters
+    #use a subquery
+    #use an aggregation/group by
     pass
 
 def delete_records(): # deletes record(s)
