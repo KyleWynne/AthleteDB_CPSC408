@@ -35,8 +35,8 @@ def name_placeholder_query(self,query,dictionary): # executes a single query giv
         return results
     
 def insert_variables(self,query, variables): # executes a single query only
-        self.cursor.execute(query, variables)
-        self.connection.commit()
+        cur_obj.execute(query, variables)
+        conn.commit()
         print("query executed")
         
 def create_all_tables():
