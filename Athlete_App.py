@@ -28,7 +28,7 @@ def execute_insert(query):
     cur_obj.execute(query)
     conn.commit()
     
-def name_placeholder_query(self,query,dictionary):
+def name_placeholder_query(self,query,dictionary): # executes a single query given a dictionary of variables
         self.cursor.execute(query,dictionary)
         results = self.cursor.fetchall()
         results = [i[0] for i in results]
@@ -39,6 +39,18 @@ def insert_variables(self,query, variables): # executes a single query only
         self.connection.commit()
         print("query executed")
         
-def destructor(self):
+def destructor(self): #commit changes and close connection
         self.connection.close()
+        
+def options():
+    print('''
+    1. Find songs by artist
+    2. Find songs by genre
+    3. Find songs by feature
+    4. Update a song's informaion
+    5. Delete a song
+    6. Delete all records with at least 1 NULL attribute
+    7. Exit
+    ''')
+    return helper.get_choice([1,2,3,4,5,6,7])
         
