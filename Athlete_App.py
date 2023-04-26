@@ -94,9 +94,10 @@ def options(): # prints options for user to choose from
     3. Delete record(s)
     4. Update record(s)
     5. Insert record(s)
-    6. Exit
+    6. Generate a csv report
+    7. Exit
     ''')
-    return helper.get_choice([1,2,3,4,5,6])
+    return helper.get_choice([1,2,3,4,5,6,7])
 
 def view_all_records(): # prints all records in a table
     pass
