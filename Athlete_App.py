@@ -27,3 +27,18 @@ def query_returnOne(query):
 def execute_insert(query):
     cur_obj.execute(query)
     conn.commit()
+    
+def name_placeholder_query(self,query,dictionary):
+        self.cursor.execute(query,dictionary)
+        results = self.cursor.fetchall()
+        results = [i[0] for i in results]
+        return results
+    
+def insert_variables(self,query, variables): # executes a single query only
+        self.cursor.execute(query, variables)
+        self.connection.commit()
+        print("query executed")
+        
+def destructor(self):
+        self.connection.close()
+        
