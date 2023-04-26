@@ -42,13 +42,28 @@ def insert_variables(self,query, variables): # executes a single query only
 def destructor(self): #commit changes and close connection
         self.connection.close()
         
-def options():
+def options(): # prints options for user to choose from
     print('''
     1. View all records in a table(teams, players, games, leagues, trophies)
     2. Query data with parameters/filters
     3. Delete record(s)
     4. Update record(s)
-    5. Exit
+    5. Insert record(s)
+    6. Exit
     ''')
-    return helper.get_choice([1,2,3,4,5])
-        
+    return helper.get_choice([1,2,3,4,5,6])
+
+def view_all_records(): # prints all records in a table
+    pass
+
+def query_data(): # queries data with parameters/filters
+    pass
+
+def delete_records(): # deletes record(s)
+    pass
+
+def update_records(): # updates record(s)
+    pass
+
+def insert_records(): # inserts record(s)
+    pass
