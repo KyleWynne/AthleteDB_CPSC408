@@ -44,13 +44,11 @@ def destructor(self): #commit changes and close connection
         
 def options():
     print('''
-    1. Find songs by artist
-    2. Find songs by genre
-    3. Find songs by feature
-    4. Update a song's informaion
-    5. Delete a song
-    6. Delete all records with at least 1 NULL attribute
-    7. Exit
+    1. View all records in a table(teams, players, games, leagues, trophies)
+    2. Query data with parameters/filters
+    3. Delete record(s)
+    4. Update record(s)
+    5. Exit
     ''')
-    return helper.get_choice([1,2,3,4,5,6,7])
+    return helper.get_choice([1,2,3,4,5])
         
