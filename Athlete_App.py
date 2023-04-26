@@ -46,7 +46,7 @@ def create_all_tables():
         team_name VARCHAR(30) NOT NULL,
         leagueID INT NOT NULL,
         trophies INT);"""
-        
+    execute_insert(query)
     query2 = """
     CREATE TABLE IF NOT EXISTS players (
         playerID INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +56,7 @@ def create_all_tables():
         sport VARCHAR(30) NOT NULL,
         trophies INT,
         teamID INT NOT NULL FOREIGN KEY);"""
-    
+    execute_insert(query2)
     query3 = """
     CREATE TABLE IF NOT EXISTS games (
         gameID INT AUTO_INCREMENT PRIMARY KEY,
@@ -65,14 +65,14 @@ def create_all_tables():
         team1_score INT NOT NULL,
         team2_score INT NOT NULL,
         outcome VARCHAR(30) NOT NULL);"""
-        
+    execute_insert(query3)  
     query4 = """
     CREATE TABLE IF NOT EXISTS leagues (
         leagueID INT AUTO_INCREMENT PRIMARY KEY,
         league_name VARCHAR(30) NOT NULL,
         sport VARCHAR(30) NOT NULL, 
         country VARCHAR(30));"""
-        
+    execute_insert(query4)
     query5 = """
     CREATE TABLE IF NOT EXISTS trophies (
         trophyID INT AUTO_INCREMENT PRIMARY KEY,
@@ -82,6 +82,7 @@ def create_all_tables():
         year YEAR,
         player_winner_id  INT NOT NULL FOREIGN KEY,
         team_winner_id INT NOT NULL FOREIGN KEY);"""
+    execute_insert(query5)
         
 def destructor(self): #commit changes and close connection
         self.connection.close()
