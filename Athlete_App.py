@@ -7,9 +7,9 @@ from datetime import date
 #connect to mysql
 conn = mysql.connector.connect(host="localhost",
                                user="root",
-                               password="cpsc408",
+                               password="database",
                                auth_plugin='mysql_native_password',
-                               database="RideShare")
+                               database="Athlete")
 
 cur_obj = conn.cursor()
 
@@ -119,35 +119,32 @@ def query_data(): # queries data with parameters/filters
         query = """
         SELECT *
         FROM players
-        WHERE player_name = '""" + player + "';"""
+        WHERE player_name = """ + player + ";"
+            
     if action == 2: 
         team = input("Enter team name: ")
         query = """
         SELECT * 
         FROM teams
-        WHERE team_name = '""" + team + "';"""
-        ""
+        WHERE team_name = """ + team + ";"
     if action == 3: 
         game = input("Enter game ID: ")
         query = """
         SELECT *
         FROM games
-        WHERE gameID = '""" + game + "';"""
-        ""
+        WHERE gameID = """ + game + ";"
     if action == 4: 
         league = input("Enter league name: ")
         query = """
         SELECT *
         FROM leagues
-        WHERE league_name = '""" + league + "';"""
-        ""
+        WHERE league_name = """ + league + ";"
     if action == 5:
         trophy = input("Enter trophy name: ")
         query = """
         SELECT *
         FROM trophies
-        WHERE trophy_name = '""" + trophy + "';"
-        ""
+        WHERE trophy_name = """ + trophy + ";"
     cur_obj.execute(query)
     return cur_obj.fetchall()     
 
@@ -345,3 +342,5 @@ def startscreen():
         if num == 7:
             break
 
+#main program
+startscreen()
