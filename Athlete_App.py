@@ -120,7 +120,7 @@ def view_all_records(): # prints all records in a table
 
 def query_data(): # queries data with parameters/filters
     #uses a subquery and aggregation
-    action = int(input("Enter 1 to query MAX salary by player, 2 to query games won by team, 3 to query by game, 4 to query by league, 5 to query by trophy: "))
+    action = int(input("Enter 1 to query MAX salary by player, 2 to query games won by team, 3 to query gameID's, 4 to query all league_name's, 5 to query by trophy_names: "))
     if action == 1:
         player_id = input("Enter playerID: ")
         query = """
