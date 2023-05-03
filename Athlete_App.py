@@ -55,13 +55,17 @@ def create_all_tables():
         age INT,
         sport VARCHAR(30) NOT NULL,
         trophies INT,
-        teamID INT NOT NULL FOREIGN KEY);"""
+        teamID INT NOT NULL,
+        FOREIGN KEY (teamID) REFERENCES teams(teamID)
+        ););"""
     execute_insert(query2)
     query3 = """
     CREATE TABLE IF NOT EXISTS games (
         gameID INT AUTO_INCREMENT PRIMARY KEY,
-        team1ID INT NOT NULL FOREIGN KEY,
-        team2ID INT NOT NULL FOREIGN KEY,
+        team1ID INT NOT NULL,
+        team2ID INT NOT NULL,
+        FOREIGN KEY (team1ID) REFERENCES teams(teamID),
+        FOREIGN KEY (team2ID) REFERENCES teams(teamID),
         team1_score INT NOT NULL,
         team2_score INT NOT NULL,
         outcome VARCHAR(30) NOT NULL);"""
@@ -77,11 +81,14 @@ def create_all_tables():
     CREATE TABLE IF NOT EXISTS trophies (
         trophyID INT AUTO_INCREMENT PRIMARY KEY,
         trophy_name VARCHAR(30) NOT NULL,
-        leagueID INT NOT NULL FOREIGN KEY,
+        leagueID INT NOT NULL,
+        FOREIGN KEY (leagueID) REFERENCES leagues(leagueID),
         sport VARCHAR(30) NOT NULL,
         year YEAR,
-        player_winner_id  INT NOT NULL FOREIGN KEY,
-        team_winner_id INT NOT NULL FOREIGN KEY);"""
+        player_winner_id  INT NOT NULL,
+        FOREIGN KEY (player_winner_id) REFERENCES players(playerID),
+        team_winner_id INT NOT NULL,
+        FOREIGN KEY (team_winner_id) REFERENCES teams(teamID));"""
     execute_insert(query5)
         
 def destructor(self): #commit changes and close connection

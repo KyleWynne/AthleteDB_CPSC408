@@ -7,6 +7,7 @@ from datetime import date
 class Backend:
 
     def __init__():
+        pass
 
     #connect to mysql
     conn = mysql.connector.connect(host="localhost",
