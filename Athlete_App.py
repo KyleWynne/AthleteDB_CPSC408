@@ -100,13 +100,56 @@ def options(): # prints options for user to choose from
     return helper.get_choice([1,2,3,4,5,6,7])
 
 def view_all_records(): # prints all records in a table
-    #enforce joins accross at least 3 tables
-    pass
+    #enforces joins accross at least 3 tables(player, trophy, team)
+    query = """
+    SELECT player.playerID, player.player_name, player.salary, player.age, player.sport, player.trophies, team.team_name, team.leagueID, team.trophies, game.gameID, game.team1ID, game.team2ID, game.team1_score, game.team2_score, game.outcome, league.leagueID, league.league_name, league.sport, league.country, trophy.trophyID, trophy.trophy_name, trophy.leagueID, trophy.sport, trophy.year, trophy.player_winner_id, trophy.team_winner_id
+    FROM players player team team, games game, leagues league, trophies trophy
+    INNER JOIN players ON player.teamID = team.teamID
+    INNER JOIN trophies ON trophy.leagueID = league.leagueID;
+    """
+    cur_obj.execute(query)
+    return cur_obj.fetchall()
 
 def query_data(): # queries data with parameters/filters
     #use a subquery
     #use an aggregation/group by
-    pass
+    action = int(input("Enter 1 to query by player, 2 to query by team, 3 to query by game, 4 to query by league, 5 to query by trophy: "))
+    if action == 1:
+        player = input("Enter player name: ")
+        query = """
+        SELECT *
+        FROM players
+        WHERE player_name = '""" + player + "';"""
+    if action == 2: 
+        team = input("Enter team name: ")
+        query = """
+        SELECT * 
+        FROM teams
+        WHERE team_name = '""" + team + "';"""
+        ""
+    if action == 3: 
+        game = input("Enter game ID: ")
+        query = """
+        SELECT *
+        FROM games
+        WHERE gameID = '""" + game + "';"""
+        ""
+    if action == 4: 
+        league = input("Enter league name: ")
+        query = """
+        SELECT *
+        FROM leagues
+        WHERE league_name = '""" + league + "';"""
+        ""
+    if action == 5:
+        trophy = input("Enter trophy name: ")
+        query = """
+        SELECT *
+        FROM trophies
+        WHERE trophy_name = '""" + trophy + "';"
+        ""
+    cur_obj.execute(query)
+    return cur_obj.fetchall()     
 
 def delete_records(): # deletes record(s)
     pass
