@@ -107,12 +107,13 @@ def options(): # prints options for user to choose from
     return helper.get_choice([1,2,3,4,5,6,7])
 
 def view_all_records(): # prints all records in a table
-    #enforces joins accross at least 3 tables(player, trophy, team)
+    #enforces joins accross at least 3 tables(teams, leauges, games)
     query = """
-    SELECT player.playerID, player.player_name, player.salary, player.age, player.sport, player.trophies, team.team_name, team.leagueID, team.trophies, game.gameID, game.team1ID, game.team2ID, game.team1_score, game.team2_score, game.outcome, league.leagueID, league.league_name, league.sport, league.country, trophy.trophyID, trophy.trophy_name, trophy.leagueID, trophy.sport, trophy.year, trophy.player_winner_id, trophy.team_winner_id
-    FROM players player team team, games game, leagues league, trophies trophy
-    INNER JOIN players ON player.teamID = team.teamID
-    INNER JOIN trophies ON trophy.leagueID = league.leagueID;
+    SELECT games.gameID, games.team1_score, games.team2_score, games.outcome, l.league_name
+    FROM games
+    JOIN teams t ON t.teamID = games.team1ID
+    JOIN games g ON t.teamID = g.team1ID AND t.teamID = g.team2ID
+    JOIN leagues l on t.leagueID = l.leagueID;
     """
     cur_obj.execute(query)
     return cur_obj.fetchall()
@@ -134,6 +135,8 @@ def query_data(): # queries data with parameters/filters
         SELECT * 
         FROM teams
         WHERE team_name = """ + team + ";"
+        #subquery to count how many games the team won
+        
     if action == 3: 
         game = input("Enter game ID: ")
         query = """
