@@ -128,6 +128,7 @@ def query_data(): # queries data with parameters/filters
         FROM players
         WHERE playerID = """ + player_id + ";"
         cur_obj.execute(query)
+        return cur_obj.fetchall() 
     if action == 2: 
         team_name = input("Enter team name: ")
         #subquery to count how many games the team won
@@ -138,6 +139,7 @@ def query_data(): # queries data with parameters/filters
         WHERE teams.team_name = %s;
         """
         cur_obj.execute(query, (team_name,))
+        return cur_obj.fetchall() 
     if action == 3: 
         game = input("Enter gameID: ")
         query = """
@@ -145,6 +147,7 @@ def query_data(): # queries data with parameters/filters
         FROM games
         WHERE gameID = """ + game + " GROUP BY gameID;"
         cur_obj.execute(query)
+        return cur_obj.fetchall() 
     if action == 4: 
         league_id = input("Enter leagueID: ")
         query = """
@@ -152,6 +155,7 @@ def query_data(): # queries data with parameters/filters
         FROM leagues
         WHERE leagueID = """ + league_id + "GROUP BY league_name;"
         cur_obj.execute(query)
+        return cur_obj.fetchall() 
     if action == 5:
         trophy = input("Enter trophy name: ")
         query = """
@@ -159,7 +163,8 @@ def query_data(): # queries data with parameters/filters
         FROM trophies
         WHERE trophy_name = """ + trophy + "GROUP BY trophy_name;"
         cur_obj.execute(query)
-    return cur_obj.fetchall()     
+        return cur_obj.fetchall() 
+        
 
 def delete_records(): # deletes record(s)
     pass
