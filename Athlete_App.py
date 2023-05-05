@@ -126,43 +126,46 @@ def view_all_records(): # prints all records in a table
     return cur_obj.fetchall()
 
 def query_data(): # queries data with parameters/filters
-    #use a subquery
-    #use an aggregation/group by
-    action = int(input("Enter 1 to query by player, 2 to query by team, 3 to query by game, 4 to query by league, 5 to query by trophy: "))
+    #uses a subquery and aggregation
+    action = int(input("Enter 1 to query MAX salary by player, 2 to query games won by team, 3 to query gameID's, 4 to query all league_name's, 5 to query by trophy_names: "))
     if action == 1:
-        player = input("Enter player name: ")
+        player_id = input("Enter playerID: ")
         query = """
-        SELECT *
+        SELECT MAX(salary)
         FROM players
-        WHERE player_name = """ + player + ";"
-            
+        WHERE playerID = """ + player_id + ";"
+        cur_obj.execute(query)
     if action == 2: 
-        team = input("Enter team name: ")
-        query = """
-        SELECT * 
-        FROM teams
-        WHERE team_name = """ + team + ";"
+        team_name = input("Enter team name: ")
         #subquery to count how many games the team won
-        
+        query = """
+        SELECT teams.team_name,
+            (SELECT COUNT(*) FROM games WHERE games.outcome = teams.id) AS games_won
+        FROM teams
+        WHERE teams.team_name = %s;
+        """
+        cur_obj.execute(query, (team_name,))
     if action == 3: 
-        game = input("Enter game ID: ")
+        game = input("Enter gameID: ")
         query = """
         SELECT *
         FROM games
-        WHERE gameID = """ + game + ";"
+        WHERE gameID = """ + game + " GROUP BY gameID;"
+        cur_obj.execute(query)
     if action == 4: 
-        league = input("Enter league name: ")
+        league_id = input("Enter leagueID: ")
         query = """
         SELECT *
         FROM leagues
-        WHERE league_name = """ + league + ";"
+        WHERE leagueID = """ + league_id + "GROUP BY league_name;"
+        cur_obj.execute(query)
     if action == 5:
         trophy = input("Enter trophy name: ")
         query = """
         SELECT *
         FROM trophies
-        WHERE trophy_name = """ + trophy + ";"
-    cur_obj.execute(query)
+        WHERE trophy_name = """ + trophy + "GROUP BY trophy_name;"
+        cur_obj.execute(query)
     return cur_obj.fetchall()     
 
 def delete_records(): # deletes record(s)
