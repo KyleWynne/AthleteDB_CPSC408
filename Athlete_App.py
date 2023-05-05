@@ -341,7 +341,7 @@ def insert_records(): # inserts record(s)
     pass
 
 def startscreen():
-    print("Welcome")
+    print("Welcome the the Athlete Database!")
     create_all_tables()
     while True:
         num = options()
