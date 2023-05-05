@@ -343,8 +343,8 @@ def insert_records(): # inserts record(s)
 def startscreen():
     print("Welcome")
     create_all_tables()
-    num = options()
     while True:
+        num = options()
         if num == 1:
             print("Not yet completed")
         if num == 2:
