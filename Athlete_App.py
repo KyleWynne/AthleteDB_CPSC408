@@ -18,6 +18,10 @@ def execute_query(query):
     cur_obj.execute(query)
     return cur_obj.fetchall()
 
+def bulk_insert(query,records):
+    cur_obj.executemany(query,records)
+    cur_obj.connection.commit()
+
 #Execute DQL query, no changes made to DB but returns only the first list item in the output
 def query_returnOne(query):
     cur_obj.execute(query)
@@ -340,9 +344,52 @@ def update_records(): # updates record(s)
 def insert_records(): # inserts record(s)
     pass
 
+def insert_sample_data(): # inserts sample data
+    query = "INSERT INTO players (player_name, salary, age, sport, trophies, teamID) VALUES(%s, %s, %s, %s, %s, %s)"
+    data = [
+        ("Lebron James", 37436858, 35, "Basketball", 4, 1),
+        ("Cristiano Ronaldo", 67800000, 35, "Soccer", 5, 2),
+        ("Lionel Messi", 61000000, 32, "Soccer", 6, 3),
+        ("Roger Federer", 7700000, 38, "Tennis", 20, 4)
+    ]
+    bulk_insert(query, data)
+    query2 = "INSERT INTO teams (team_name, leagueID, trophies) VALUES(%s, %s, %s)"
+    data2 = [
+        ("Lakers", 1, 17),
+        ("Juventus", 2, 36),
+        ("Barcelona", 2, 26),
+        ("Switzerland", 3, 0)
+    ]
+    bulk_insert(query2, data2)
+    query3 = "INSERT INTO games (team1_score, team2_score, outcome) VALUES(%s, %s, %s)"
+    data3 = [
+        (100, 98, "W"),
+        (2, 1, "W"),
+        (2, 3, "L"),
+        (0, 1, "L")
+    ]
+    bulk_insert(query3, data3)
+    query4 = "INSERT INTO trophies (trophy_name, player_winner_id, team_winner_id) VALUES(%s, %s, %s)"
+    data4 = [
+        ("NBA Championship", 1, 1),
+        ("Serie A", 2, 2),
+        ("La Liga", 3, 3),
+        ("Wimbledon", 4, 4)
+    ]
+    bulk_insert(query4, data4)
+    query5 = "INSERT INTO leagues (league_name, sport, country) VALUES(%s, %s, %s)"
+    data5 = [
+        ("NBA", "Basketball", "USA"),
+        ("Serie A", "Soccer", "Italy"),
+        ("La Liga", "Soccer", "Spain"),
+        ("ATP", "Tennis", "World")
+    ]
+    bulk_insert(query5, data5)
+
 def startscreen():
     print("Welcome the the Athlete Database!")
     create_all_tables()
+    insert_sample_data()
     while True:
         num = options()
         if num == 1:
