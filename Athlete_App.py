@@ -377,7 +377,7 @@ def insert_sample_data(): # inserts sample data
         (0, 1, "L", 4, 3)
     ]
     #bulk_insert(query3, data3)
-    #TODO: Put into datagrip because it isnt working
+    #TODO: FIXME
     # query4 = "INSERT INTO trophies (trophy_name,leagueID, sport) VALUES(%s,%s, %s)"
     # data4 = [
     #     ('NBA Championship', 5, 'Basketball'),
