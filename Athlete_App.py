@@ -90,6 +90,13 @@ def create_all_tables():
         team_winner_id INT NOT NULL,
         FOREIGN KEY (team_winner_id) REFERENCES teams(teamID));"""
     execute_insert(query5)
+    query6 = """
+    CREATE INDEX team_index ON teams(teamID);
+    CREATE INDEX player_index ON players(playerID);"""
+    execute_insert(query6)
+    query7 = """
+    
+    """
         
 def destructor(self): #commit changes and close connection
         self.connection.close()
