@@ -57,7 +57,7 @@ def create_all_tables():
         trophies INT,
         teamID INT NOT NULL,
         FOREIGN KEY (teamID) REFERENCES teams(teamID)
-        ););"""
+        );"""
     execute_insert(query2)
     query3 = """
     CREATE TABLE IF NOT EXISTS games (
