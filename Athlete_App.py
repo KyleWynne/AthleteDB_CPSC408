@@ -7,7 +7,7 @@ from datetime import date
 #connect to mysql
 conn = mysql.connector.connect(host="localhost",
                                user="root",
-                               password="database",
+                               password="cpsc408!",
                                auth_plugin='mysql_native_password',
                                database="Athlete")
 
@@ -87,7 +87,6 @@ def create_all_tables():
         trophy_name VARCHAR(30) NOT NULL,
         leagueID INT NOT NULL,
         FOREIGN KEY (leagueID) REFERENCES leagues(leagueID),
-        sport VARCHAR(30) NOT NULL,
         year YEAR,
         player_winner_id  INT,
         FOREIGN KEY (player_winner_id) REFERENCES players(playerID),
