@@ -7,7 +7,7 @@ from datetime import date
 #connect to mysql
 conn = mysql.connector.connect(host="localhost",
                                user="root",
-                               password="database",
+                               password="cpsc408!",
                                auth_plugin='mysql_native_password',
                                database="Athlete")
 
@@ -17,6 +17,10 @@ cur_obj = conn.cursor()
 def execute_query(query):
     cur_obj.execute(query)
     return cur_obj.fetchall()
+
+def bulk_insert(query,records):
+    cur_obj.executemany(query,records)
+    conn.commit()
 
 #Execute DQL query, no changes made to DB but returns only the first list item in the output
 def query_returnOne(query):
@@ -55,15 +59,15 @@ def create_all_tables():
         age INT,
         sport VARCHAR(30) NOT NULL,
         trophies INT,
-        teamID INT NOT NULL,
+        teamID INT,
         FOREIGN KEY (teamID) REFERENCES teams(teamID)
-        ););"""
+        );"""
     execute_insert(query2)
     query3 = """
     CREATE TABLE IF NOT EXISTS games (
         gameID INT AUTO_INCREMENT PRIMARY KEY,
-        team1ID INT NOT NULL,
-        team2ID INT NOT NULL,
+        team1ID INT ,
+        team2ID INT ,
         FOREIGN KEY (team1ID) REFERENCES teams(teamID),
         FOREIGN KEY (team2ID) REFERENCES teams(teamID),
         team1_score INT NOT NULL,
@@ -83,11 +87,10 @@ def create_all_tables():
         trophy_name VARCHAR(30) NOT NULL,
         leagueID INT NOT NULL,
         FOREIGN KEY (leagueID) REFERENCES leagues(leagueID),
-        sport VARCHAR(30) NOT NULL,
         year YEAR,
-        player_winner_id  INT NOT NULL,
+        player_winner_id  INT,
         FOREIGN KEY (player_winner_id) REFERENCES players(playerID),
-        team_winner_id INT NOT NULL,
+        team_winner_id INT,
         FOREIGN KEY (team_winner_id) REFERENCES teams(teamID));"""
     execute_insert(query5)
     query6 = """
@@ -135,6 +138,7 @@ def query_data(): # queries data with parameters/filters
         FROM players
         WHERE playerID = """ + player_id + ";"
         cur_obj.execute(query)
+        return cur_obj.fetchall() 
     if action == 2: 
         team_name = input("Enter team name: ")
         #subquery to count how many games the team won
@@ -145,6 +149,7 @@ def query_data(): # queries data with parameters/filters
         WHERE teams.team_name = %s;
         """
         cur_obj.execute(query, (team_name,))
+        return cur_obj.fetchall() 
     if action == 3: 
         game = input("Enter gameID: ")
         query = """
@@ -152,6 +157,7 @@ def query_data(): # queries data with parameters/filters
         FROM games
         WHERE gameID = """ + game + " GROUP BY gameID;"
         cur_obj.execute(query)
+        return cur_obj.fetchall() 
     if action == 4: 
         league_id = input("Enter leagueID: ")
         query = """
@@ -159,6 +165,7 @@ def query_data(): # queries data with parameters/filters
         FROM leagues
         WHERE leagueID = """ + league_id + "GROUP BY league_name;"
         cur_obj.execute(query)
+        return cur_obj.fetchall() 
     if action == 5:
         trophy = input("Enter trophy name: ")
         query = """
@@ -166,7 +173,8 @@ def query_data(): # queries data with parameters/filters
         FROM trophies
         WHERE trophy_name = """ + trophy + "GROUP BY trophy_name;"
         cur_obj.execute(query)
-    return cur_obj.fetchall()     
+        return cur_obj.fetchall() 
+        
 
 def delete_records(): # deletes record(s)
     pass
@@ -342,11 +350,54 @@ def update_records(): # updates record(s)
 def insert_records(): # inserts record(s)
     pass
 
+def insert_sample_data(): # inserts sample data
+    query5 = "INSERT INTO leagues (league_name, sport, country) VALUES(%s, %s, %s)"
+    data5 = [
+        ("NBA", "Basketball", "USA"),
+        ("Serie A", "Soccer", "Italy"),
+        ("La Liga", "Soccer", "Spain"),
+        ("ATP", "Tennis", "World")
+    ]
+    #bulk_insert(query5, data5)
+    query2 = "INSERT INTO teams (teamID, team_name, leagueID, trophies) VALUES(%s, %s, %s, %s)"
+    data2 = [
+        (1,"Lakers", 1, 17),
+        (2,"Juventus", 2, 36),
+        (3,"Barcelona", 2, 26),
+        (4,"Switzerland", 3, 0)
+    ]
+    #bulk_insert(query2, data2)
+    query = "INSERT INTO players (player_name, salary, age, sport, trophies, teamID) VALUES(%s, %s, %s, %s, %s,%s)"
+    data = [
+        ("Lebron James", 37436858, 35, "Basketball", 4, 1),
+        ("Cristiano Ronaldo", 67800000, 35, "Soccer", 5,2),
+        ("Lionel Messi", 61000000, 32, "Soccer", 6,3),
+        ("Roger Federer", 7700000, 38, "Tennis", 20,4)
+    ]
+    #bulk_insert(query, data)
+    query3 = "INSERT INTO games (team1_score, team2_score, outcome, team1ID, team2ID) VALUES(%s, %s, %s,%s, %s)"
+    data3 = [
+        (100, 98, "W", 1, 2),
+        (2, 1, "W", 3, 4),
+        (2, 3, "L", 2, 3),
+        (0, 1, "L", 4, 3)
+    ]
+    #bulk_insert(query3, data3)
+    #TODO: FIXME
+    # query4 = "INSERT INTO trophies (trophy_name,leagueID, sport) VALUES(%s,%s, %s)"
+    # data4 = [
+    #     ('NBA Championship', 5, 'Basketball'),
+    #     ('Serie A', 6, 'Soccer'),
+    #     ('La Liga', 7, 'Soccer'),
+    #     ('Wimbledon', 8, 'Tennis')
+    # ]
+    # bulk_insert(query4, data4)
 def startscreen():
-    print("Welcome")
+    print("Welcome the the Athlete Database!")
     create_all_tables()
-    num = options()
+    insert_sample_data()
     while True:
+        num = options()
         if num == 1:
             print("Not yet completed")
         if num == 2:
