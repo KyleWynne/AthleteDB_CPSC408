@@ -7,7 +7,7 @@ from datetime import date
 #connect to mysql
 conn = mysql.connector.connect(host="localhost",
                                user="root",
-                               password="cpsc408!",
+                               password="cpsc408",
                                auth_plugin='mysql_native_password',
                                database="Athlete")
 
@@ -96,7 +96,7 @@ def create_all_tables():
     query6 = """
     CREATE INDEX team_index ON teams(teamID);
     CREATE INDEX player_index ON players(playerID);"""
-    execute_insert(query6)
+    #execute_insert(query6)
     query7 = """
     
     """
@@ -227,38 +227,45 @@ def find_table_tuple(num):
 def findID(a, curr_name):
     name = curr_name
     num = a
-    if num == 1:
-        query = '''
-        SELECT playerID
-        FROM players 
-        WHERE player_name = ''' + name + ";"
-    if num == 2:
-        query = '''
-        SELECT teamID
-        FROM teams 
-        WHERE team_name = ''' + name + ";"
-    if num == 3:
-        print("DNE")
-    if num == 4:
-        query = '''
-        SELECT trophyID
-        FROM trophies 
-        WHERE trophy_name = ''' + name + ";"
-    if num == 5:
-        query = '''
-        SELECT leagueID
-        FROM leagues 
-        WHERE league_name = ''' + name + ";"
-#add try catch block??? how to account for input errors
-    return query_returnOne(query)
+    while True:
+        try:
+            if num == 1:
+                query = """
+                SELECT playerID
+                FROM players 
+                WHERE player_name =  '""" + name + "';"
+            if num == 2:
+                query = """
+                SELECT teamID
+                FROM teams 
+                WHERE team_name = '""" + name + "';"
+            if num == 3:
+                print("DNE")
+            if num == 4:
+                query = """
+                SELECT trophyID
+                FROM trophies 
+                WHERE trophy_name = '""" + name + "';"
+            if num == 5:
+                query = """
+                SELECT leagueID
+                FROM leagues 
+                WHERE league_name = '""" + name + "';"
+            return query_returnOne(query)
+        except TypeError:
+            print("Value does not Exist")
+            num = input("Enter name again: ")
+
 
 def update_records(): # updates record(s)
-    opt = update_options()
-    tuple = find_table_tuple(opt)
-    id = tuple[0]
     while True:
+        opt = update_options()
+        if opt != 5:
+            tuple = find_table_tuple(opt)
+            id = str(tuple[0][0])
+            print(id)
         if opt == 1:
-            print("What would you like to change\n")
+            print("What would you like to change")
             print('''
             1. player Name
             2. yearly salary
@@ -267,7 +274,7 @@ def update_records(): # updates record(s)
             5. number of trophies
             6. Team 
             ''')
-            num = helper.get_choice[(1,2,3,4,5,6)]
+            num = int(input())
             value = input("Enter new value: ")
             if num == 1:
                 att = "player_name"
@@ -282,54 +289,53 @@ def update_records(): # updates record(s)
             if num == 6:
                 att = "teamID"
                 value = findID(2,value)
+                print(value)
             query = '''
-            UPDATE TABLE players 
-            SET ''' + att + " = " + value + '''
-            WHERE playerID = ''' + id + ";"
+            UPDATE players 
+            SET ''' + att + " = '" + str(value) + ''''
+            WHERE playerID = ''' + str(id) + ";"
         if opt == 2:
-            print("What would you like to change\n")
+            print("What would you like to change")
             print('''
             1. Team Name
-            2. League
-            3. number of trophies
+            2. number of trophies
             ''')
-            num = helper.get_choice[(1,2,3,4,5,6)]
+            num = int(input())
             value = input("Enter new value: ")
             if num == 1:
                 att = "team_name"
             if num == 2:
-                att = "leagueID"
-                value = findID(5,value)
-            if num == 3:
                 att = "trophies"
-            query = '''
-            UPDATE TABLE teams 
-            SET ''' + att + " = " + value + '''
-            WHERE teamID = ''' + id + ";"
+            query = """
+            UPDATE teams 
+            SET """ + att + " = '" + str(value) + """'
+            WHERE teamID = """ + str(id) + ";"
         if opt == 3:
-            print("What would you like to change\n")
+            print("What would you like to change")
             print('''
             1. Team1 score
             2. Team2 score
             3. outcome
             ''')
+            num = int(input())
+            value = input("Enter new value: ")
             if num == 1:
                 att = "team1_score"
             if num == 2:
                 att = "team2_score"
             if num == 3:
-                att = "ourcome"
+                att = "outcome"
             query = '''
-            UPDATE TABLE games 
-            SET ''' + att + " = " + value + '''
-            WHERE gameID = ''' + id + ";"
+            UPDATE games 
+            SET ''' + att + " = '" + str(value) + """'
+            WHERE gameID = """ + str(id) + ";"
         if opt == 4:
-            print("What would you like to change\n")
+            print("What would you like to change")
             print('''
             1. Most recent player winner
             2. Most recent team winner
             ''')
-            num = helper.get_choice([1,2])
+            num = int(input())
             value = input("Enter new value: ")
             if num == 1:
                 att = "player_winner_id"
@@ -338,12 +344,13 @@ def update_records(): # updates record(s)
                 att = "team_winner_id"
                 value = findID(2,value)
             query = '''
-            UPDATE TABLE trophies 
-            SET ''' + att + " = " + value + '''
-            WHERE trophyID = ''' + id + ";"
+            UPDATE trophies 
+            SET ''' + att + " = " + str(value) + '''
+            WHERE trophyID = ''' + str(id) + ";"
         if opt == 5:
             print("Changes Done")
             break
+        execute_insert(query)
     
     
 
@@ -351,47 +358,49 @@ def insert_records(): # inserts record(s)
     pass
 
 def insert_sample_data(): # inserts sample data
-    query5 = "INSERT INTO leagues (league_name, sport, country) VALUES(%s, %s, %s)"
+    query5 = "INSERT INTO leagues (league_name, sport, country) VALUES(%s, %s,%s)"
     data5 = [
+        ("Ghost", "nothing", "Nothing"),
         ("NBA", "Basketball", "USA"),
         ("Serie A", "Soccer", "Italy"),
         ("La Liga", "Soccer", "Spain"),
         ("ATP", "Tennis", "World")
     ]
     #bulk_insert(query5, data5)
-    query2 = "INSERT INTO teams (teamID, team_name, leagueID, trophies) VALUES(%s, %s, %s, %s)"
+    query2 = "INSERT INTO teams (team_name, leagueID, trophies) VALUES(%s, %s, %s)"
     data2 = [
-        (1,"Lakers", 1, 17),
-        (2,"Juventus", 2, 36),
-        (3,"Barcelona", 2, 26),
-        (4,"Switzerland", 3, 0)
+        ("Ghost", 1, 0),
+        ("Lakers", 2, 17),
+        ("Juventus", 3, 36),
+        ("Barcelona", 3, 26),
+        ("Switzerland", 4, 0)
     ]
     #bulk_insert(query2, data2)
-    query = "INSERT INTO players (player_name, salary, age, sport, trophies, teamID) VALUES(%s, %s, %s, %s, %s,%s)"
+    query = "INSERT INTO players (player_name, salary, age, sport, trophies, teamID) VALUES(%s, %s, %s, %s,%s,%s)"
     data = [
-        ("Lebron James", 37436858, 35, "Basketball", 4, 1),
-        ("Cristiano Ronaldo", 67800000, 35, "Soccer", 5,2),
-        ("Lionel Messi", 61000000, 32, "Soccer", 6,3),
-        ("Roger Federer", 7700000, 38, "Tennis", 20,4)
+        ("Ghost", 0, 0, "ghost", 0, 1),
+        ("Lebron James", 37436858, 35, "Basketball", 4, 2),
+        ("Cristiano Ronaldo", 67800000, 35, "Soccer", 5,3),
+        ("Lionel Messi", 61000000, 32, "Soccer", 6,4),
+        ("Roger Federer", 7700000, 38, "Tennis", 20,5)
     ]
     #bulk_insert(query, data)
     query3 = "INSERT INTO games (team1_score, team2_score, outcome, team1ID, team2ID) VALUES(%s, %s, %s,%s, %s)"
     data3 = [
-        (100, 98, "W", 1, 2),
-        (2, 1, "W", 3, 4),
-        (2, 3, "L", 2, 3),
-        (0, 1, "L", 4, 3)
+        (100, 98, "W", 2, 3),
+        (2, 1, "W", 4, 5),
+        (2, 3, "L", 3, 4),
+        (0, 1, "L", 5, 4)
     ]
     #bulk_insert(query3, data3)
-    #TODO: FIXME
-    # query4 = "INSERT INTO trophies (trophy_name,leagueID, sport) VALUES(%s,%s, %s)"
-    # data4 = [
-    #     ('NBA Championship', 5, 'Basketball'),
-    #     ('Serie A', 6, 'Soccer'),
-    #     ('La Liga', 7, 'Soccer'),
-    #     ('Wimbledon', 8, 'Tennis')
-    # ]
-    # bulk_insert(query4, data4)
+    query4 = "INSERT INTO trophies (trophy_name,leagueID, team_winner_id, player_winner_id) VALUES(%s,%s,%s,%s)"
+    data4 = [
+        ('NBA Championship', 2, 1, 1),
+        ('Serie A', 3, 1, 1),
+        ('La Liga', 4,  1, 1),
+        ('Wimbledon', 5, 1, 1)
+    ]
+    #bulk_insert(query4, data4)
 def startscreen():
     print("Welcome the the Athlete Database!")
     create_all_tables()
@@ -406,6 +415,7 @@ def startscreen():
             print("Not yet completed")
         if num == 4:
             print("You chose to update a record")
+            update_records()
         if num == 5:
             print("Not yet completed")
         if num == 6:
