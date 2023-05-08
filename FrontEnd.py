@@ -212,6 +212,7 @@ class Add_Athlete(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
 
         label = tk.Label(self, text="Add An Athlete To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
@@ -256,7 +257,7 @@ class Add_Athlete(tk.Frame):
         self.EnterTrophies = tk.Entry(self,)
         self.EnterTrophies.pack()  
 
-        label7 = tk.Label(self, text="Team ID if no team than put 0:", font=controller.Subsection_font)
+        label7 = tk.Label(self, text="Team ID if no team than put 1:", font=controller.Subsection_font)
         label7.pack()
 
         self.EnterTeamID = tk.Entry(self,)
@@ -267,8 +268,12 @@ class Add_Athlete(tk.Frame):
         button3.pack()
     
     def EnterplayerInfo(self, *args):
-        self.Adder.Insert_Athlete(self.EnterName.get(), self.EnterSalary.get(), self.EnterAge.get(), self.EnterSport.get(), self.EnterTrophies.get(), self.EnterTeamID.get())
-        self.controller.show_frame("PageThree")
+        self.ErrorHandle = self.Adder.Insert_Athlete(self.EnterName.get(), self.EnterSalary.get(), self.EnterAge.get(), self.EnterSport.get(), self.EnterTrophies.get(), self.EnterTeamID.get())
+        if self.ErrorHandle == "invalid input":
+            label8 = tk.Label(self, text="Invalid Team Name", font=self.controller.Subsection_font)
+            label8.pack()
+        else:
+            self.controller.show_frame("PageThree")
 
 class Add_League(tk.Frame):
 
@@ -322,6 +327,7 @@ class Add_Game(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
 
         label = tk.Label(self, text="Add A Game To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
@@ -371,8 +377,12 @@ class Add_Game(tk.Frame):
         button3.pack()
     
     def EnterGameInfo(self, *args):
-        self.Adder.Insert_Game(self.EnterT1ID.get(), self.EnterT2ID.get(), self.EnterT1S.get(), self.EnterT2S.get(), self.EnterOutcome.get())
-        self.controller.show_frame("PageThree")
+        self.ErrorHandle = self.Adder.Insert_Game(self.EnterT1ID.get(), self.EnterT2ID.get(), self.EnterT1S.get(), self.EnterT2S.get(), self.EnterOutcome.get())
+        if self.ErrorHandle == "invalid input":
+            label8 = tk.Label(self, text="Invalid Team Name", font=self.controller.Subsection_font)
+            label8.pack()
+        else:
+            self.controller.show_frame("PageThree")
 
 class Add_Award(tk.Frame):
 
@@ -380,6 +390,7 @@ class Add_Award(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
 
         label = tk.Label(self, text="Add A Award To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
@@ -412,13 +423,13 @@ class Add_Award(tk.Frame):
         self.EnterYear = tk.Entry(self,)
         self.EnterYear.pack() 
 
-        label6 = tk.Label(self, text="Player ID (for a league championship put in player ID 0)", font=controller.Subsection_font)
+        label6 = tk.Label(self, text="Player ID (for a league championship put in player ID 1)", font=controller.Subsection_font)
         label6.pack()  
 
         self.EnterPlayerID = tk.Entry(self,)
         self.EnterPlayerID.pack()    
 
-        label6 = tk.Label(self, text="Team ID (for a player award put in Team ID 0):", font=controller.Subsection_font)
+        label6 = tk.Label(self, text="Team ID (for a player award put in Team ID 1):", font=controller.Subsection_font)
         label6.pack()
 
         self.EnterTeamID = tk.Entry(self,)
@@ -429,9 +440,14 @@ class Add_Award(tk.Frame):
         button3.pack()
     
     def EnterplayerInfo(self, *args):
-        self.Adder.Insert_Award(self.EnterName.get(), self.EnterLeagueID.get(), self.EnterPlayerID.get(), self.EnterTeamID.get(), self.EnterYear.get())
-        self.controller.show_frame("PageThree")
+        self.ErrorHandle = self.Adder.Insert_Award(self.EnterName.get(), self.EnterLeagueID.get(), self.EnterPlayerID.get(), self.EnterTeamID.get(), self.EnterYear.get())
 
+        if self.ErrorHandle == "invalid input":
+            label8 = tk.Label(self, text="Invalid Team, Player or League Name", font=self.controller.Subsection_font)
+            label8.pack()
+        else:
+            self.controller.show_frame("PageThree")
+        
 
 class Add_Team(tk.Frame):
 
@@ -439,6 +455,8 @@ class Add_Team(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
+
         label = tk.Label(self, text="Add A Team To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
@@ -475,8 +493,13 @@ class Add_Team(tk.Frame):
         button3.pack()
     
     def EnterplayerInfo(self, *args):
-        self.Adder.Insert_Team(self.EnterName.get(), self.EnterLID.get(), self.EnterChamps.get())
-        self.controller.show_frame("PageThree")
+        self.ErrorHandle = self.Adder.Insert_Team(self.EnterName.get(), self.EnterLID.get(), self.EnterChamps.get())
+
+        if self.ErrorHandle == "invalid input":
+            label8 = tk.Label(self, text="Invalid League Name", font=self.controller.Subsection_font)
+            label8.pack()
+        else:
+            self.controller.show_frame("PageThree")
 
 
 if __name__ == "__main__":
