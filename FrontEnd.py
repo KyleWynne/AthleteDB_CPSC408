@@ -313,7 +313,7 @@ class Add_Athlete(tk.Frame):
         self.EnterTrophies = tk.Entry(self,)
         self.EnterTrophies.pack()  
 
-        label7 = tk.Label(self, text="Team ID if no team than put 1:", font=controller.Subsection_font)
+        label7 = tk.Label(self, text="Team Name if no team than put 1:", font=controller.Subsection_font)
         label7.pack()
 
         self.EnterTeamID = tk.Entry(self,)
@@ -400,13 +400,13 @@ class Add_Game(tk.Frame):
         label2 = tk.Label(self, text="Input the information for each field then hit \"Finish\":", font=controller.Subsection_font)
         label2.pack()
 
-        label3 = tk.Label(self, text="Team 1 ID:", font=controller.Subsection_font)
+        label3 = tk.Label(self, text="Team 1 Name:", font=controller.Subsection_font)
         label3.pack()
 
         self.EnterT1ID = tk.Entry(self)
         self.EnterT1ID.pack()
 
-        label4 = tk.Label(self, text="Team 2 ID:", font=controller.Subsection_font)
+        label4 = tk.Label(self, text="Team 2 Name:", font=controller.Subsection_font)
         label4.pack()
 
         self.EnterT2ID = tk.Entry(self)
@@ -470,7 +470,7 @@ class Add_Award(tk.Frame):
         self.EnterName = tk.Entry(self,)
         self.EnterName.pack()
 
-        label4 = tk.Label(self, text="League ID", font=controller.Subsection_font)
+        label4 = tk.Label(self, text="League Name", font=controller.Subsection_font)
         label4.pack()
 
         self.EnterLeagueID = tk.Entry(self,)
@@ -482,13 +482,13 @@ class Add_Award(tk.Frame):
         self.EnterYear = tk.Entry(self,)
         self.EnterYear.pack() 
 
-        label6 = tk.Label(self, text="Player ID (for a league championship put in player ID 1)", font=controller.Subsection_font)
+        label6 = tk.Label(self, text="Player Name (for a league championship put in player ID 1)", font=controller.Subsection_font)
         label6.pack()  
 
         self.EnterPlayerID = tk.Entry(self,)
         self.EnterPlayerID.pack()    
 
-        label6 = tk.Label(self, text="Team ID (for a player award put in Team ID 1):", font=controller.Subsection_font)
+        label6 = tk.Label(self, text="Team Name (for a player award put in Team ID 1):", font=controller.Subsection_font)
         label6.pack()
 
         self.EnterTeamID = tk.Entry(self,)
@@ -542,7 +542,7 @@ class Add_Team(tk.Frame):
         self.EnterChamps = tk.Entry(self,)
         self.EnterChamps.pack()
 
-        label5 = tk.Label(self, text="League ID:", font=controller.Subsection_font)
+        label5 = tk.Label(self, text="League Name:", font=controller.Subsection_font)
         label5.pack()
 
         self.EnterLID = tk.Entry(self,)
