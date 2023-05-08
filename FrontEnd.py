@@ -175,7 +175,7 @@ class PageThree(tk.Frame):
         button1.pack()
 
     def AddOptionChanged(self, *args):
-        print(self.option_var.get())
+        pass
     
     def NextPressedAdd(self, *args):
 
@@ -200,11 +200,67 @@ class PageFour(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
+
+        self.menu_options = ('Athlete','Award','Team','Game')
+        self.option_var = tk.StringVar(self)
+
         label = tk.Label(self, text="Remove Info From Our System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.DelOptionChanged
+        )
+
+        option_menu.pack()
+
+        label3 = tk.Label(self, text="Object Name:", font=controller.Subsection_font)
+        label3.pack()
+
+        self.EnterName = tk.Entry(self)
+        self.EnterName.pack()
+
+        label4 = tk.Label(self, text="For games only put team 2 here: (can be left balank for all others)", font=controller.Subsection_font)
+        label4.pack()
+
+        self.EnterName2 = tk.Entry(self)
+        self.EnterName2.pack()
+
+        button2 = tk.Button(self, text="Delete",
+                           command=self.DelplayerInfo)
+        button2.pack()
+
+    def DelOptionChanged(self, *args):
+        pass
+    
+    def DelplayerInfo(self, *args):
+        if self.option_var.get() == "Athlete":
+            self.ErrorHandle = self.Adder.delete_tuple(1, self.EnterName.get(), self.EnterName2.get())
+
+        if self.option_var.get() == "Team":
+            self.ErrorHandle = self.Adder.delete_tuple(2, self.EnterName.get(), self.EnterName2.get())
+
+        if self.option_var.get() == "Award":
+            self.ErrorHandle = self.Adder.delete_tuple(4, self.EnterName.get(), self.EnterName2.get())
+
+        if self.option_var.get() == "Game":
+            self.ErrorHandle = self.Adder.delete_tuple(3, self.EnterName.get(), self.EnterName2.get())
+        
+        if self.ErrorHandle == "invalid input":
+            label8 = tk.Label(self, text="Invalid Name", font=self.controller.Subsection_font)
+            label8.pack()
+        else:
+            del self.Adder
+            self.controller.show_frame("StartPage")
+
+
 
 class Add_Athlete(tk.Frame):
 
@@ -273,6 +329,7 @@ class Add_Athlete(tk.Frame):
             label8 = tk.Label(self, text="Invalid Team Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
+            del self.Adder
             self.controller.show_frame("PageThree")
 
 class Add_League(tk.Frame):
@@ -319,6 +376,7 @@ class Add_League(tk.Frame):
     
     def EnterLeagueInfo(self, *args):
         self.Adder.Insert_League(self.EnterName.get(), self.EnterSport.get(), self.EnterCounrty.get())
+        del self.Adder
         self.controller.show_frame("PageThree")
 
 class Add_Game(tk.Frame):
@@ -382,6 +440,7 @@ class Add_Game(tk.Frame):
             label8 = tk.Label(self, text="Invalid Team Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
+            del self.Adder
             self.controller.show_frame("PageThree")
 
 class Add_Award(tk.Frame):
@@ -446,6 +505,7 @@ class Add_Award(tk.Frame):
             label8 = tk.Label(self, text="Invalid Team, Player or League Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
+            del self.Adder
             self.controller.show_frame("PageThree")
         
 
@@ -499,6 +559,7 @@ class Add_Team(tk.Frame):
             label8 = tk.Label(self, text="Invalid League Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
+            del self.Adder
             self.controller.show_frame("PageThree")
 
 

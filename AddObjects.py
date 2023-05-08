@@ -17,6 +17,10 @@ class AddObjects:
 
         self.cur_obj = self.conn.cursor()
 
+    def __del__(self):
+        del self.cur_obj
+        self.conn.close()
+
     def execute_insert(self, query):
         self.cur_obj.execute(query)
         self.conn.commit()
@@ -63,11 +67,11 @@ class AddObjects:
             self.execute_insert(query)
         
     def Insert_Award(self, name, league_id, player_id, teamID, year):
-        if league_id != 1:
+        if league_id != "1":
             league_id = self.findID(5, league_id)
-        if player_id != 1:
+        if player_id != "1":
             player_id = self.findID(1, player_id)
-        if teamID != 1:
+        if teamID != "1":
             teamID = self.findID(2, teamID)
         
         if league_id == "invalid input":
@@ -82,6 +86,70 @@ class AddObjects:
             player_id = str(player_id)
             query = "INSERT INTO trophies VALUES(NULL,\'"+name+"\', \'"+league_id+"\', \'"+year+"\', \'"+player_id+"\', \'"+teamID+"\');"
             self.execute_insert(query)
+    
+    def delete_tuple(self, table, id, id2):
+        num = int(table)
+        try:
+            if num == 1:
+                #print("Deleting from players")
+                id = self.findID(1, id)
+                if id == "invalid input":
+                    return "invalid input"
+
+                else: 
+                    query = """
+                    DELETE FROM players
+                    WHERE playerID = """ + str(id) + ";"
+
+                    self.execute_insert(query)
+
+            if num == 2:
+                #print("deleting from teams")
+                id = self.findID(2, id)
+                if id == "invalid input":
+                    return "invalid input"
+
+                else:
+                    query = """
+                    START TRANSACTION;
+                    UPDATE players
+                    SET teamID = 1
+                    WHERE teamID = """ + str(id) + """;
+                    DELETE FROM teams
+                    WHERE teamID = """ + str(id) + """;
+                    ROLLBACK"""
+
+                    self.execute_insert(query)
+
+            if num == 3:
+                #print("Deleting from games")
+                id = self.findID(2, id)
+                id2 = self.findID(2, id2)
+                if id == "invalid input":
+                    return "invalid input"
+                elif id2 == "invalid input":
+                    return "invalid input"
+
+                else:
+                    query = """
+                    DELETE FROM games
+                    WHERE gameID = """ + str(id) + ";"
+
+                    self.execute_insert(query)
+            if num == 4:
+                #print("Deleting from trophies")
+                id = self.findID(4, id)
+                if id == "invalid input":
+                    return "invalid input"
+                else:
+                    query = """
+                    DELETE FROM trophies
+                    WHERE trophyID = """ + str(id) + ";"
+
+                    self.execute_insert(query)
+
+        except TypeError:
+            print("Invalid Input")
 
     def findID(self, a, curr_name):
         name = curr_name
