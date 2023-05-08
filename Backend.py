@@ -6,17 +6,16 @@ from datetime import date
 
 class Backend:
 
-    def __init__():
-        pass
+    def __init__(self):
 
     #connect to mysql
-    conn = mysql.connector.connect(host="localhost",
+        conn = mysql.connector.connect(host="localhost",
                                     user="root",
-                                    password="cpsc408",
+                                    password="cpsc408!",
                                     auth_plugin='mysql_native_password',
-                                    database="RideShare")
+                                    database="Athlete")
 
-    cur_obj = conn.cursor()
+        cur_obj = conn.cursor()
 
     #execute DQL query, no changes made to DB but returns the total output
     def execute_query(query):
@@ -284,7 +283,7 @@ class Backend:
         
         
 
-    def insert_records(): # inserts record(s)
+    def insert_records(self, table, value): # inserts record(s)
         pass
 
     def startscreen():

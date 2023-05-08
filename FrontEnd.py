@@ -7,6 +7,7 @@ except ImportError:
     import tkFont as tkfont  # python 2
 
 import Backend as Backend
+import AddObjects as AddObjects
 
 class SampleApp(tk.Tk):
 
@@ -26,7 +27,7 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, Add_Team, Add_Athlete, Add_Club, Add_League, Add_Game):
+        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, Add_Team, Add_Athlete, Add_Award, Add_League, Add_Game):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -74,7 +75,7 @@ class PageOne(tk.Frame):
         self.controller = controller
         self.BE = Backend.Backend()
 
-        self.menu_options = ('Athlete','League','Club','Sport','Game')
+        self.menu_options = ('Athlete','League','Award','Sport','Game')
         self.option_var = tk.StringVar(self)
         self.KeyValue = tk.StringVar(self)
         self.KeyName = tk.StringVar(self)
@@ -112,7 +113,7 @@ class PageOne(tk.Frame):
         label4 = tk.Label(self, text="Enter player name Here:", font=controller.Info_font)
         label4.pack()
 
-        self.EnterName = tk.Entry(self,)
+        self.EnterName = tk.Entry(self)
         self.EnterName.pack()
 
         button3 = tk.Button(self, text="Next", command=self.NameInput)
@@ -149,7 +150,7 @@ class PageThree(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
 
-        self.menu_options = ('Athlete','League','Club','Team','Game')
+        self.menu_options = ('Athlete','League','Award','Team','Game')
         self.option_var = tk.StringVar(self)
 
         label = tk.Label(self, text="Add To Our System!", font=controller.title_font)
@@ -184,8 +185,8 @@ class PageThree(tk.Frame):
         if self.option_var.get() == "League":
             self.controller.show_frame("Add_League")
         
-        if self.option_var.get() == "Club":
-            self.controller.show_frame("Add_Club")
+        if self.option_var.get() == "Award":
+            self.controller.show_frame("Add_Award")
 
         if self.option_var.get() == "Team":
             self.controller.show_frame("Add_Team")
@@ -210,6 +211,8 @@ class Add_Athlete(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+
         label = tk.Label(self, text="Add An Athlete To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
@@ -223,11 +226,57 @@ class Add_Athlete(tk.Frame):
         label2 = tk.Label(self, text="Input the information for each field then hit \"Finish\":", font=controller.Subsection_font)
         label2.pack()
 
+        label3 = tk.Label(self, text="Player Name:", font=controller.Subsection_font)
+        label3.pack()
+
+        self.EnterName = tk.Entry(self,)
+        self.EnterName.pack()
+
+        label4 = tk.Label(self, text="Player Salary (without commas):", font=controller.Subsection_font)
+        label4.pack()
+
+        self.EnterSalary = tk.Entry(self,)
+        self.EnterSalary.pack()
+
+        label5 = tk.Label(self, text="Player Age:", font=controller.Subsection_font)
+        label5.pack()
+
+        self.EnterAge = tk.Entry(self,)
+        self.EnterAge.pack() 
+
+        label6 = tk.Label(self, text="Player Sport:", font=controller.Subsection_font)
+        label6.pack()  
+
+        self.EnterSport = tk.Entry(self,)
+        self.EnterSport.pack()    
+
+        label6 = tk.Label(self, text="Number of player specific acolades (MVP, Ballon d'Or, etc):", font=controller.Subsection_font)
+        label6.pack()
+
+        self.EnterTrophies = tk.Entry(self,)
+        self.EnterTrophies.pack()  
+
+        label7 = tk.Label(self, text="Team ID if no team than put 0:", font=controller.Subsection_font)
+        label7.pack()
+
+        self.EnterTeamID = tk.Entry(self,)
+        self.EnterTeamID.pack() 
+
+        button3 = tk.Button(self, text="Enter",
+                           command=self.EnterplayerInfo)
+        button3.pack()
+    
+    def EnterplayerInfo(self, *args):
+        self.Adder.Insert_Athlete(self.EnterName.get(), self.EnterSalary.get(), self.EnterAge.get(), self.EnterSport.get(), self.EnterTrophies.get(), self.EnterTeamID.get())
+        self.controller.show_frame("PageThree")
+
 class Add_League(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+
         label = tk.Label(self, text="Add A League To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
@@ -241,11 +290,39 @@ class Add_League(tk.Frame):
         label2 = tk.Label(self, text="Input the information for each field then hit \"Finish\":", font=controller.Subsection_font)
         label2.pack()
 
+        label3 = tk.Label(self, text="League Name:", font=controller.Subsection_font)
+        label3.pack()
+
+        self.EnterName = tk.Entry(self)
+        self.EnterName.pack()
+
+        label4 = tk.Label(self, text="League Sport:", font=controller.Subsection_font)
+        label4.pack()
+
+        self.EnterSport = tk.Entry(self)
+        self.EnterSport.pack()
+
+        label5 = tk.Label(self, text="League Counrty:", font=controller.Subsection_font)
+        label5.pack()
+
+        self.EnterCounrty = tk.Entry(self)
+        self.EnterCounrty.pack() 
+
+        self.button3 = tk.Button(self, text="Enter",
+                           command=self.EnterLeagueInfo)
+        self.button3.pack()
+    
+    def EnterLeagueInfo(self, *args):
+        self.Adder.Insert_League(self.EnterName.get(), self.EnterSport.get(), self.EnterCounrty.get())
+        self.controller.show_frame("PageThree")
+
 class Add_Game(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+
         label = tk.Label(self, text="Add A Game To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
@@ -259,12 +336,52 @@ class Add_Game(tk.Frame):
         label2 = tk.Label(self, text="Input the information for each field then hit \"Finish\":", font=controller.Subsection_font)
         label2.pack()
 
-class Add_Club(tk.Frame):
+        label3 = tk.Label(self, text="Team 1 ID:", font=controller.Subsection_font)
+        label3.pack()
+
+        self.EnterT1ID = tk.Entry(self)
+        self.EnterT1ID.pack()
+
+        label4 = tk.Label(self, text="Team 2 ID:", font=controller.Subsection_font)
+        label4.pack()
+
+        self.EnterT2ID = tk.Entry(self)
+        self.EnterT2ID.pack()
+
+        label5 = tk.Label(self, text="Team 1 Score:", font=controller.Subsection_font)
+        label5.pack()
+
+        self.EnterT1S = tk.Entry(self)
+        self.EnterT1S.pack() 
+
+        label6 = tk.Label(self, text="Team 2 Score:", font=controller.Subsection_font)
+        label6.pack()  
+
+        self.EnterT2S = tk.Entry(self)
+        self.EnterT2S.pack()    
+
+        label6 = tk.Label(self, text="Outcome(Win, Loss, Draw, DNF):", font=controller.Subsection_font)
+        label6.pack()
+
+        self.EnterOutcome = tk.Entry(self)
+        self.EnterOutcome.pack()  
+
+        button3 = tk.Button(self, text="Enter",
+                           command=self.EnterGameInfo)
+        button3.pack()
+    
+    def EnterGameInfo(self, *args):
+        self.Adder.Insert_Game(self.EnterT1ID.get(), self.EnterT2ID.get(), self.EnterT1S.get(), self.EnterT2S.get(), self.EnterOutcome.get())
+        self.controller.show_frame("PageThree")
+
+class Add_Award(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        label = tk.Label(self, text="Add A Club To The System!", font=controller.title_font)
+        self.Adder = AddObjects.AddObjects()
+
+        label = tk.Label(self, text="Add A Award To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
                            command=lambda: controller.show_frame("StartPage"))
@@ -277,11 +394,51 @@ class Add_Club(tk.Frame):
         label2 = tk.Label(self, text="Input the information for each field then hit \"Finish\":", font=controller.Subsection_font)
         label2.pack()
 
+        label3 = tk.Label(self, text="Trophy Name:", font=controller.Subsection_font)
+        label3.pack()
+
+        self.EnterName = tk.Entry(self,)
+        self.EnterName.pack()
+
+        label4 = tk.Label(self, text="League ID", font=controller.Subsection_font)
+        label4.pack()
+
+        self.EnterLeagueID = tk.Entry(self,)
+        self.EnterLeagueID.pack()
+
+        label5 = tk.Label(self, text="Year", font=controller.Subsection_font)
+        label5.pack()
+
+        self.EnterYear = tk.Entry(self,)
+        self.EnterYear.pack() 
+
+        label6 = tk.Label(self, text="Player ID (for a league championship put in player ID 0)", font=controller.Subsection_font)
+        label6.pack()  
+
+        self.EnterPlayerID = tk.Entry(self,)
+        self.EnterPlayerID.pack()    
+
+        label6 = tk.Label(self, text="Team ID (for a player award put in Team ID 0):", font=controller.Subsection_font)
+        label6.pack()
+
+        self.EnterTeamID = tk.Entry(self,)
+        self.EnterTeamID.pack()  
+
+        button3 = tk.Button(self, text="Enter",
+                           command=self.EnterplayerInfo)
+        button3.pack()
+    
+    def EnterplayerInfo(self, *args):
+        self.Adder.Insert_Award(self.EnterName.get(), self.EnterLeagueID.get(), self.EnterPlayerID.get(), self.EnterTeamID.get(), self.EnterYear.get())
+        self.controller.show_frame("PageThree")
+
+
 class Add_Team(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.Adder = AddObjects.AddObjects()
         label = tk.Label(self, text="Add A Team To The System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
@@ -295,7 +452,31 @@ class Add_Team(tk.Frame):
         label2 = tk.Label(self, text="Input the information for each field then hit \"Finish\":", font=controller.Subsection_font)
         label2.pack()
 
+        label3 = tk.Label(self, text="Team Name:", font=controller.Subsection_font)
+        label3.pack()
 
+        self.EnterName = tk.Entry(self,)
+        self.EnterName.pack()
+
+        label4 = tk.Label(self, text="Number of Championships:", font=controller.Subsection_font)
+        label4.pack()
+
+        self.EnterChamps = tk.Entry(self,)
+        self.EnterChamps.pack()
+
+        label5 = tk.Label(self, text="League ID:", font=controller.Subsection_font)
+        label5.pack()
+
+        self.EnterLID = tk.Entry(self,)
+        self.EnterLID.pack() 
+
+        button3 = tk.Button(self, text="Enter",
+                           command=self.EnterplayerInfo)
+        button3.pack()
+    
+    def EnterplayerInfo(self, *args):
+        self.Adder.Insert_Team(self.EnterName.get(), self.EnterLID.get(), self.EnterChamps.get())
+        self.controller.show_frame("PageThree")
 
 
 if __name__ == "__main__":
