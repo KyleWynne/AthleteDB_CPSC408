@@ -253,8 +253,8 @@ def findID(a, curr_name):
                 WHERE league_name = '""" + name + "';"
             return query_returnOne(query)
         except TypeError:
-            print("Value does not Exist")
-            num = input("Enter name again: ")
+                print("Value does not Exist")
+                num = input("Enter name again: ")
 
 
 def update_records(): # updates record(s)
@@ -340,13 +340,29 @@ def update_records(): # updates record(s)
             if num == 1:
                 att = "player_winner_id"
                 value = findID(1,value)
+                query = '''
+                START TRANSACTION;
+                UPDATE trophies 
+                SET ''' + att + " = '" + str(value) + """'
+                WHERE trophyID = """ + str(id) + ";" + """
+                UPDATE players
+                SET trophies = trophies + 1
+                WHERE playerID = """ + str(value) + """;
+                COMMIT;
+                """
             if num == 2:
                 att = "team_winner_id"
                 value = findID(2,value)
-            query = '''
-            UPDATE trophies 
-            SET ''' + att + " = " + str(value) + '''
-            WHERE trophyID = ''' + str(id) + ";"
+                query = '''
+                START TRANSACTION;
+                UPDATE trophies 
+                SET ''' + att + " = " + str(value) + '''
+                WHERE trophyID = ''' + str(id) + ";" + """
+                UPDATE teams
+                SET trophies = trophies + 1
+                WHERE teamID = """ + str(value) + """;
+                COMMIT;
+                """
         if opt == 5:
             print("Changes Done")
             break

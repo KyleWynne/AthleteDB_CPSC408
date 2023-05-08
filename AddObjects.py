@@ -40,3 +40,38 @@ class AddObjects:
     def Insert_Award(self, name, league_id, player_id, teamID, year):
         query = "INSERT INTO trophies VALUES(NULL,\'"+name+"\', \'"+league_id+"\', \'"+year+"\', \'"+player_id+"\', \'"+teamID+"\');"
         self.execute_insert(query)
+
+    def delete_tuple(self, table, id):
+        num = int(table)
+        try:
+            if num == 1:
+                print("Deleting from players")
+                query = """
+                DELETE FROM players
+                WHERE playerID = """ + str(id) + ";"
+            if num == 2:
+                print("deleting from teams")
+                query = """
+                START TRANSACTION;
+                UPDATE players
+                SET teamID = 1
+                WHERE teamID = """ + str(id) + """;
+                DELETE FROM teams
+                WHERE teamID = """ + str(id) + """;
+                ROLLBACK"""
+                            
+            if num == 3:
+                print("Deleting from games")
+                query = """
+                DELETE FROM games
+                WHERE gameID = """ + str(id) + ";"
+            if num == 4:
+                print("Deleting from trophies")
+                query = """
+                DELETE FROM trophies
+                WHERE trohpyID = """ + str(id) + ";"
+            self.execute_insert(query)
+        except TypeError:
+            print("Invalid Input")
+        
+            
