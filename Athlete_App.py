@@ -177,6 +177,14 @@ def query_data(): # queries data with parameters/filters
         
 
 def delete_records(): # deletes record(s)
+    tablename = input("Give me the table name: ")
+    column = input("From what column do u want to remove from: ")
+    data = input("What exacly do u want to delete: ")
+    query = '''
+    DELETE FROM '{tablename}'
+    WHERE '{column}' LIKE '{data}';
+    '''
+    cur_obj.execute(query)
     pass
 
 def update_options():
@@ -370,6 +378,15 @@ def update_records(): # updates record(s)
     
 
 def insert_records(): # inserts record(s)
+    #made it single input for testing purpose
+    tablename = input("Give me table name: ")
+    columnname1 = input("Give me the columnname: ")
+    value1 = input("Give me the values you want to input: ")
+    query = '''
+    INSERT INTO '{tablename}'('{columnname1}')
+    VALUES (%s, %s, %s), ('{value1}')
+    '''
+    cur_obj.execute(query)
     pass
 
 def insert_sample_data(): # inserts sample data
