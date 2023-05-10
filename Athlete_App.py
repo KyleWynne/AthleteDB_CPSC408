@@ -340,33 +340,32 @@ def update_records(): # updates record(s)
             if num == 1:
                 att = "player_winner_id"
                 value = findID(1,value)
-                query = '''
-                START TRANSACTION;
+                query1 = '''
                 UPDATE trophies 
                 SET ''' + att + " = '" + str(value) + """'
-                WHERE trophyID = """ + str(id) + ";" + """
-                UPDATE players
+                WHERE trophyID = """ + str(id) + ";"
+
+                query2 = """UPDATE players
                 SET trophies = trophies + 1
-                WHERE playerID = """ + str(value) + """;
-                COMMIT;
-                """
+                WHERE playerID = """ + str(value) + """;"""
             if num == 2:
                 att = "team_winner_id"
                 value = findID(2,value)
-                query = '''
-                START TRANSACTION;
+                query1 = '''
                 UPDATE trophies 
                 SET ''' + att + " = " + str(value) + '''
-                WHERE trophyID = ''' + str(id) + ";" + """
-                UPDATE teams
+                WHERE trophyID = ''' + str(id) + ";"
+
+                query2 = """UPDATE teams
                 SET trophies = trophies + 1
-                WHERE teamID = """ + str(value) + """;
-                COMMIT;
-                """
+                WHERE teamID = """ + str(value) + """;"""
         if opt == 5:
             print("Changes Done")
             break
-        execute_insert(query)
+        execute_insert("START TRANSACTION;")
+        execute_insert(query1)
+        execute_insert(query2)
+        execute_insert("COMMIT;")
     
     
 

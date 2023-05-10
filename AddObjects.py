@@ -111,15 +111,17 @@ class AddObjects:
 
                 else:
                     query = """
-                    START TRANSACTION;
                     UPDATE players
                     SET teamID = 1
-                    WHERE teamID = """ + str(id) + """;
-                    DELETE FROM teams
-                    WHERE teamID = """ + str(id) + """;
-                    ROLLBACK"""
-
+                    WHERE teamID = """ + str(id) + ";"
+                    
+                    query2 = """ DELETE FROM teams
+                    WHERE teamID = """ + str(id) + ";"
+                    
+                    self.execute_insert("START TRANSACTION;")
                     self.execute_insert(query)
+                    self.execute_insert(query2)
+                    self.execute_insert("COMMIT;")
 
             if num == 3:
                 #print("Deleting from games")
