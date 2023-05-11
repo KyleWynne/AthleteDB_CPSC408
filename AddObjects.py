@@ -151,7 +151,7 @@ class AddObjects:
                     self.execute_insert(query)
 
         except TypeError:
-            print("Invalid Input")
+            pass
 
     def findID(self, a, curr_name):
         name = curr_name
@@ -163,28 +163,195 @@ class AddObjects:
                     query = """
                     SELECT playerID
                     FROM players 
-                    WHERE player_name =  '""" + name + "';"
+                    WHERE player_name =  '""" + name + "'""""
+                    LIMIT 1;"""
                 if num == 2:
-                    print("hi from team")
                     query = """
                     SELECT teamID
                     FROM teams 
-                    WHERE team_name = \'""" + name + "\';"
+                    WHERE team_name = \'""" + name + "\'""""
+                    LIMIT 1;"""
                 if num == 3:
                     print("DNE")
                 if num == 4:
                     query = """
                     SELECT trophyID
                     FROM trophies 
-                    WHERE trophy_name = '""" + name + "';"
+                    WHERE trophy_name = '""" + name + "'""""
+                    LIMIT 1;"""
                 if num == 5:
                     query = """
                     SELECT leagueID
                     FROM leagues 
-                    WHERE league_name = '""" + name + "';"
+                    WHERE league_name = '""" + name + "'""""
+                    LIMIT 1;"""
                 tester = self.query_returnOne(query)
                 tester = str(tester)
                 return tester
 
             except TypeError:
                 return "invalid input"
+    
+    def update_records(self, opt, num, value, old, old2): # updates record(s)
+
+        tuple = self.find_table_tuple(opt, old, old2)
+        id = str(tuple[0][0])
+        if opt == 1:
+            # print("What would you like to change")
+            # print('''
+            # 1. player Name
+            # 2. yearly salary
+            # 3. age in years
+            # 4. sport
+            # 5. number of trophies
+            # 6. Team 
+            # ''')
+            if num == 1:
+                att = "player_name"
+            if num == 2:
+                att = "salary"
+            if num == 3:
+                att = "age"
+            if num == 4:
+                att = "sport"
+            if num == 5:
+                att = "trophies"
+            if num == 6:
+                att = "teamID"
+                value = self.findID(2,value)
+
+            query = '''
+            UPDATE players 
+            SET ''' + att + " = '" + str(value) + ''''
+            WHERE playerID = ''' + str(id) + ";"
+        if opt == 2:
+            # print("What would you like to change")
+            # print('''
+            # 1. Team Name
+            # 2. number of trophies
+            # ''')
+            # num = int(input())
+            # value = input("Enter new value: ")
+            if num == 1:
+                att = "team_name"
+            if num == 2:
+                att = "trophies"
+            query = """
+            UPDATE teams 
+            SET """ + att + " = '" + str(value) + """'
+            WHERE teamID = """ + str(id) + ";"
+        if opt == 3:
+            # print("What would you like to change")
+            # print('''
+            # 1. Team1 score
+            # 2. Team2 score
+            # 3. outcome
+            # ''')
+            # num = int(input())
+            #value = input("Enter new value: ")
+            if num == 1:
+                att = "team1_score"
+            if num == 2:
+                att = "team2_score"
+            if num == 3:
+                att = "outcome"
+            query = '''
+            UPDATE games 
+            SET ''' + att + " = '" + str(value) + """'
+            WHERE gameID = """ + str(id) + ";"
+        if opt == 4:
+            # print("What would you like to change")
+            # print('''
+            # 1. Most recent player winner
+            # 2. Most recent team winner
+            # ''')
+            # num = int(input())
+            # value = input("Enter new value: ")
+            if num == 1:
+                att = "player_winner_id"
+                value = self.findID(1,value)
+                query1 = '''
+                UPDATE trophies 
+                SET ''' + att + " = '" + str(value) + """'
+                WHERE trophyID = """ + str(id) + ";"
+
+                query2 = """UPDATE players
+                SET trophies = trophies + 1
+                WHERE playerID = """ + str(value) + """;"""
+            if num == 2:
+                att = "team_winner_id"
+                value = self.findID(2,value)
+                query1 = '''
+                UPDATE trophies 
+                SET ''' + att + " = " + str(value) + '''
+                WHERE trophyID = ''' + str(id) + ";"
+
+                query2 = """UPDATE teams
+                SET trophies = trophies + 1
+                WHERE teamID = """ + str(value) + """;"""
+        
+            self.execute_insert("START TRANSACTION;")
+            self.execute_insert(query1)
+            self.execute_insert(query2)
+            self.execute_insert("COMMIT;")
+            
+        else:
+
+            self.execute_insert(query)
+
+    def find_table_tuple(self, num, name, name2):
+        num = num
+        if num == 1:
+            id = self.findID(1, name)
+            id = str(id)
+            query = '''
+            SELECT *
+            FROM players
+            Where PlayerID = ''' + id + ";"
+        if num == 2:
+            id = self.findID(2, name)
+            id = str(id)
+            query = '''
+            SELECT *
+            FROM teams
+            Where teamID = ''' + id + ";"
+        if num == 3:
+            id = self.FindGameID(name, name2)
+            id = str(id)
+            query = '''
+            SELECT *
+            FROM games
+            Where gameID = ''' + id + ";"
+        if num == 4:
+            id = self.findID(4, name)
+            id = str(id)
+            query = '''
+            SELECT *
+            FROM trophies
+            Where trophyID = ''' + id + ";"           
+        if num == 5:
+            id = self.findID(5, name)
+            id = str(id)
+            query = '''
+            SELECT *
+            FROM leagues
+            Where leagueID = ''' + id + ";"       
+        self.cur_obj.execute(query)
+        return self.cur_obj.fetchall()
+    
+    def FindGameID(self, Teamname1, Teamname2):
+        teamID1 = self.findID(2, Teamname1)
+        teamID2 = self.findID(2, Teamname2)
+        if teamID1 == "invalid input":
+            return teamID1
+        elif teamID2 == "invalid input":
+            return teamID2
+        else:
+            teamID1 = str(teamID1)
+            teamID2 = str(teamID2)
+            query = ''' 
+            SELECT gameID
+            FROM games
+            WHERE ('''+teamID1+''' OR '''+teamID2+''' = 4)
+            AND ('''+teamID1+''' OR '''+teamID2+''' = 3);'''
+            return self.query_returnOne(query)
