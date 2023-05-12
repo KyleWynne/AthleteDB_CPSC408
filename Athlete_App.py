@@ -3,13 +3,14 @@ from helper import helper
 import re
 import string
 from datetime import date
+import csv
 
 #connect to mysql
 conn = mysql.connector.connect(host="localhost",
                                user="root",
-                               password="cpsc408",
+                               password="P.anthony723",
                                auth_plugin='mysql_native_password',
-                               database="Athlete")
+                               database="AthleteDB")
 
 cur_obj = conn.cursor()
 
@@ -31,18 +32,18 @@ def query_returnOne(query):
 def execute_insert(query):
     cur_obj.execute(query)
     conn.commit()
-    
+
 def name_placeholder_query(self,query,dictionary): # executes a single query given a dictionary of variables
         self.cursor.execute(query,dictionary)
         results = self.cursor.fetchall()
         results = [i[0] for i in results]
         return results
-    
+
 def insert_variables(self,query, variables): # executes a single query only
         cur_obj.execute(query, variables)
         conn.commit()
         print("query executed")
-        
+
 def create_all_tables():
     query = """
     CREATE TABLE IF NOT EXISTS teams (
@@ -73,12 +74,12 @@ def create_all_tables():
         team1_score INT NOT NULL,
         team2_score INT NOT NULL,
         outcome VARCHAR(30) NOT NULL);"""
-    execute_insert(query3)  
+    execute_insert(query3)
     query4 = """
     CREATE TABLE IF NOT EXISTS leagues (
         leagueID INT AUTO_INCREMENT PRIMARY KEY,
         league_name VARCHAR(30) NOT NULL,
-        sport VARCHAR(30) NOT NULL, 
+        sport VARCHAR(30) NOT NULL,
         country VARCHAR(30));"""
     execute_insert(query4)
     query5 = """
@@ -98,12 +99,12 @@ def create_all_tables():
     CREATE INDEX player_index ON players(playerID);"""
     #execute_insert(query6)
     query7 = """
-    
+
     """
-        
+
 def destructor(self): #commit changes and close connection
         self.connection.close()
-        
+
 def options(): # prints options for user to choose from
     print('''
     1. View all records in a table(teams, players, games, leagues, trophies)
@@ -118,6 +119,7 @@ def options(): # prints options for user to choose from
 
 def view_all_records(): # prints all records in a table
     #enforces joins accross at least 3 tables(teams, leauges, games)
+
     query = """
     SELECT games.gameID, games.team1_score, games.team2_score, games.outcome, l.league_name
     FROM games
@@ -127,6 +129,30 @@ def view_all_records(): # prints all records in a table
     """
     cur_obj.execute(query)
     return cur_obj.fetchall()
+
+    query1 = """
+    CREATE VIEW team_view AS
+    SELECT games.team1_score, games.team2_score, games.outcome
+    FROM games
+    WHERE games.team1_score = games.team2_score
+    """
+    cur_obj.execute(query1)
+
+    query2 = """
+    SELECT * FROM team_view
+    """
+    cur_obj.execute(query2)
+
+def generate_csv(): #export the view after it is created
+    query = """
+    SELECT *
+    FROM players
+    """
+    cur_obj.execute(query)
+    rows = cur_obj.fetchall()
+    with open('players.csv','w',newline = '') as file:
+        writer = csv.writer(file)
+        writer.writerows(rows)
 
 def query_data(): # queries data with parameters/filters
     #uses a subquery and aggregation
@@ -138,8 +164,8 @@ def query_data(): # queries data with parameters/filters
         FROM players
         WHERE playerID = """ + player_id + ";"
         cur_obj.execute(query)
-        return cur_obj.fetchall() 
-    if action == 2: 
+        return cur_obj.fetchall()
+    if action == 2:
         team_name = input("Enter team name: ")
         #subquery to count how many games the team won
         query = """
@@ -149,23 +175,23 @@ def query_data(): # queries data with parameters/filters
         WHERE teams.team_name = %s;
         """
         cur_obj.execute(query, (team_name,))
-        return cur_obj.fetchall() 
-    if action == 3: 
+        return cur_obj.fetchall()
+    if action == 3:
         game = input("Enter gameID: ")
         query = """
         SELECT *
         FROM games
         WHERE gameID = """ + game + " GROUP BY gameID;"
         cur_obj.execute(query)
-        return cur_obj.fetchall() 
-    if action == 4: 
+        return cur_obj.fetchall()
+    if action == 4:
         league_id = input("Enter leagueID: ")
         query = """
         SELECT *
         FROM leagues
         WHERE leagueID = """ + league_id + "GROUP BY league_name;"
         cur_obj.execute(query)
-        return cur_obj.fetchall() 
+        return cur_obj.fetchall()
     if action == 5:
         trophy = input("Enter trophy name: ")
         query = """
@@ -173,8 +199,8 @@ def query_data(): # queries data with parameters/filters
         FROM trophies
         WHERE trophy_name = """ + trophy + "GROUP BY trophy_name;"
         cur_obj.execute(query)
-        return cur_obj.fetchall() 
-        
+        return cur_obj.fetchall()
+
 
 def delete_records(): # deletes record(s)
     tablename = input("Give me the table name: ")
@@ -222,13 +248,13 @@ def find_table_tuple(num):
         query = '''
         SELECT *
         FROM trophies
-        Where trophyID = ''' + id + ";"           
+        Where trophyID = ''' + id + ";"
     if num == 5:
         id = input("Enter League ID: ")
         query = '''
         SELECT *
         FROM leagues
-        Where leagueID = ''' + id + ";"       
+        Where leagueID = ''' + id + ";"
     cur_obj.execute(query)
     return cur_obj.fetchall()
 
@@ -240,24 +266,24 @@ def findID(a, curr_name):
             if num == 1:
                 query = """
                 SELECT playerID
-                FROM players 
+                FROM players
                 WHERE player_name =  '""" + name + "';"
             if num == 2:
                 query = """
                 SELECT teamID
-                FROM teams 
+                FROM teams
                 WHERE team_name = '""" + name + "';"
             if num == 3:
                 print("DNE")
             if num == 4:
                 query = """
                 SELECT trophyID
-                FROM trophies 
+                FROM trophies
                 WHERE trophy_name = '""" + name + "';"
             if num == 5:
                 query = """
                 SELECT leagueID
-                FROM leagues 
+                FROM leagues
                 WHERE league_name = '""" + name + "';"
             return query_returnOne(query)
         except TypeError:
@@ -280,7 +306,7 @@ def update_records(): # updates record(s)
             3. age in years
             4. sport
             5. number of trophies
-            6. Team 
+            6. Team
             ''')
             num = int(input())
             value = input("Enter new value: ")
@@ -299,7 +325,7 @@ def update_records(): # updates record(s)
                 value = findID(2,value)
                 print(value)
             query = '''
-            UPDATE players 
+            UPDATE players
             SET ''' + att + " = '" + str(value) + ''''
             WHERE playerID = ''' + str(id) + ";"
         if opt == 2:
@@ -315,7 +341,7 @@ def update_records(): # updates record(s)
             if num == 2:
                 att = "trophies"
             query = """
-            UPDATE teams 
+            UPDATE teams
             SET """ + att + " = '" + str(value) + """'
             WHERE teamID = """ + str(id) + ";"
         if opt == 3:
@@ -334,7 +360,7 @@ def update_records(): # updates record(s)
             if num == 3:
                 att = "outcome"
             query = '''
-            UPDATE games 
+            UPDATE games
             SET ''' + att + " = '" + str(value) + """'
             WHERE gameID = """ + str(id) + ";"
         if opt == 4:
@@ -349,7 +375,7 @@ def update_records(): # updates record(s)
                 att = "player_winner_id"
                 value = findID(1,value)
                 query1 = '''
-                UPDATE trophies 
+                UPDATE trophies
                 SET ''' + att + " = '" + str(value) + """'
                 WHERE trophyID = """ + str(id) + ";"
 
@@ -360,7 +386,7 @@ def update_records(): # updates record(s)
                 att = "team_winner_id"
                 value = findID(2,value)
                 query1 = '''
-                UPDATE trophies 
+                UPDATE trophies
                 SET ''' + att + " = " + str(value) + '''
                 WHERE trophyID = ''' + str(id) + ";"
 
@@ -374,8 +400,8 @@ def update_records(): # updates record(s)
         execute_insert(query1)
         execute_insert(query2)
         execute_insert("COMMIT;")
-    
-    
+
+
 
 def insert_records(): # inserts record(s)
     #made it single input for testing purpose
@@ -451,9 +477,11 @@ def startscreen():
         if num == 5:
             print("Not yet completed")
         if num == 6:
-            print("Not yet completed")
+            print("You chose to generate a csv report")
+            generate_csv()
         if num == 7:
             break
 
 #main program
-startscreen()
+#startscreen()
+view_all_records()
