@@ -143,7 +143,7 @@ def view_all_records(): # prints all records in a table
     """
     cur_obj.execute(query2)
 
-def generate_csv(): #export the view after it is created
+def generate_csv(): #export the players table after it is created
     query = """
     SELECT *
     FROM players
