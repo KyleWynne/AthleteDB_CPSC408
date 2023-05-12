@@ -409,9 +409,8 @@ def insert_records(): # inserts record(s)
     columnname1 = input("Give me the columnname: ")
     value1 = input("Give me the values you want to input: ")
     query = '''
-    INSERT INTO '{tablename}'('{columnname1}')
-    VALUES (%s, %s, %s), ('{value1}')
-    '''
+    INSERT INTO ''' + tablename + "(" + columnname1 + ")"'''
+    VALUES (%s)''', (value1) + ''';'''
     cur_obj.execute(query)
     pass
 
@@ -484,4 +483,4 @@ def startscreen():
 
 #main program
 #startscreen()
-view_all_records()
+insert_records()
