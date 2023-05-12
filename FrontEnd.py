@@ -27,7 +27,7 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, Add_Team, Add_Athlete, Add_Award, Add_League, Add_Game):
+        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, Add_Team, Add_Athlete, Add_Award, Add_League, Add_Game, AboutPage, Update_Game, Update_Team, Update_Athlete, Update_Award):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -42,7 +42,6 @@ class SampleApp(tk.Tk):
         '''Show a frame for the given page name'''
         frame = self.frames[page_name]
         frame.tkraise()
-
 
 class StartPage(tk.Frame):
 
@@ -60,22 +59,24 @@ class StartPage(tk.Frame):
         button3 = tk.Button(self, text="Add Page", 
                             command=lambda: controller.show_frame("PageThree"))
         button4 = tk.Button(self, text="Delete Page", 
-                            command=lambda: controller.show_frame("PageFour"))      
+                            command=lambda: controller.show_frame("PageFour")) 
+        button5 = tk.Button(self, text="About Page", 
+                            command=lambda: controller.show_frame("AboutPage"))     
 
         button1.pack()
         button2.pack()
         button3.pack()
         button4.pack()
-
+        button5.pack()
 
 class PageOne(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
-        self.BE = Backend.Backend()
+        self.Adder = AddObjects.AddObjects()
 
-        self.menu_options = ('Athlete','League','Award','Sport','Game')
+        self.menu_options = ('Athlete','League','Award','Team','Game')
         self.option_var = tk.StringVar(self)
         self.KeyValue = tk.StringVar(self)
         self.KeyName = tk.StringVar(self)
@@ -101,48 +102,355 @@ class PageOne(tk.Frame):
         self.output_label = tk.Label(self, font=controller.Info_font)
         self.output_label.pack()
 
-        label3 = tk.Label(self, text="Please Enter the key of what you are searching or use the search by name bar:", font=controller.Subsection_font)
+        label3 = tk.Label(self, text="Please Enter the Name of what you are searching: ", font=controller.Subsection_font)
         label3.pack()
-
-        self.EnterKey = tk.Entry(self)
-        self.EnterKey.pack()
-
-        button2 = tk.Button(self, text="Next", command=self.KeyInput)
-        button2.pack()
-
-        label4 = tk.Label(self, text="Enter player name Here:", font=controller.Info_font)
-        label4.pack()
 
         self.EnterName = tk.Entry(self)
         self.EnterName.pack()
 
-        button3 = tk.Button(self, text="Next", command=self.NameInput)
+        label4 = tk.Label(self, text="Enter Team 2 name Here (only for games):", font=controller.Info_font)
+        label4.pack()
+
+        self.EnterName2 = tk.Entry(self)
+        self.EnterName2.pack()
+
+        button3 = tk.Button(self, text="Search", command=self.NameInput)
         button3.pack()
 
-        label5 = tk.Label(self, font=controller.Info_font)
-        label5.pack()
-
-    def KeyInput(self, *args):
-        self.KeyValue = self.BE.find_table_tuple(self.EnterKey.get())
+        self.label5 = tk.Label(self, font=controller.Info_font)
+        self.label5.pack()
         
     def NameInput(self, *args):
-        self.KeyValue = self.BE.findID(self.option_var.get(), self.EnterName.get())
-        self.label5['text'] = f'That Key # is: {self.KeyValue}'
+    
+        if self.option_var.get() == "Athlete":
+            self.KeyValue = self.Adder.find_table_tuple(1, self.EnterName.get(), self.EnterName2.get())
+            self.label5['text'] = f'That Key Data is: {self.KeyValue}'
+        
+        if self.option_var.get() == "League":
+            self.KeyValue = self.Adder.find_table_tuple(5, self.EnterName.get(), self.EnterName2.get())
+            self.label5['text'] = f'That Key Data is: {self.KeyValue}'
+
+        if self.option_var.get() == "Game":
+            self.KeyValue = self.Adder.find_table_tuple(3, self.EnterName.get(), self.EnterName2.get())
+            self.label5['text'] = f'That Key Data is: {self.KeyValue}'
+
+        if self.option_var.get() == "Award":
+            self.KeyValue = self.Adder.find_table_tuple(4, self.EnterName.get(), self.EnterName2.get())
+            self.label5['text'] = f'That Key Data is: {self.KeyValue}'
+
+        if self.option_var.get() == "Team":
+            self.KeyValue = self.Adder.find_table_tuple(2, self.EnterName.get(), self.EnterName2.get())
+            self.label5['text'] = f'That Key Data is: {self.KeyValue}'
 
     def optionChanged(self, *args):
-        self.output_label['text'] = f'You selected: {self.option_var.get()}'
-
+        pass
+        # self.output_label['text'] = f'You selected: {self.option_var.get()}'
 
 class PageTwo(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
+        self.menu_options = ('Athlete','Award','Team','Game')
+        self.option_var = tk.StringVar(self)
+
         label = tk.Label(self, text="Make A Change To Our System!", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
         button = tk.Button(self, text="Start Page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+
+        label2 = tk.Label(self, text="What Type of data would you like to Change?", font=controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.UpdateOptionChanged
+        )
+        option_menu.pack()
+
+        button1 = tk.Button(self, text="Next",
+                           command=self.NextPressedUpdate)
+        button1.pack()
+
+    def UpdateOptionChanged(self, *args):
+        pass
+    
+    def NextPressedUpdate(self, *args):
+
+        if self.option_var.get() == "Athlete":
+            self.controller.show_frame("Update_Athlete")
+        
+        if self.option_var.get() == "Award":
+            self.controller.show_frame("Update_Award")
+
+        if self.option_var.get() == "Team":
+            self.controller.show_frame("Update_Team")
+        
+        if self.option_var.get() == "Game":
+            self.controller.show_frame("Update_Game")
+
+class Update_Athlete(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.menu_options = ('Name','Salary','Age','Sport', 'Number of Trophies', 'Team')
+        self.option_var = tk.StringVar(self)
+        self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
+
+        label = tk.Label(self, text="Update Player Information", font=self.controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: self.controller.show_frame("StartPage"))
+        button.pack()
+
+        button1 = tk.Button(self, text="Back",
+                           command=lambda: self.controller.show_frame("PageTwo"))
+        button1.pack()
+
+        label2 = tk.Label(self, text="What Aspect Would you like to Change?", font=self.controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.AthleteOptionChanged
+        )
+        option_menu.pack()
+
+        label1 = tk.Label(self, text="Type The Name Of The Player You Would Like To Update", font=self.controller.Subsection_font)
+        label1.pack()
+
+        self.EnterName = tk.Entry(self)
+        self.EnterName.pack()
+
+        label3 = tk.Label(self, text="Type Your New Value Here", font=self.controller.Subsection_font)
+        label3.pack()
+
+        self.EnterValue = tk.Entry(self)
+        self.EnterValue.pack()
+
+        button2 = tk.Button(self, text="Enter", command=self.UpdateEnterPressed)
+        button2.pack()
+    
+    def AthleteOptionChanged(self, *args):
+        pass
+
+    def UpdateEnterPressed(self, *args):
+        if self.option_var.get() == "Name":
+            self.ErrorHandle = self.Adder.update_records(1, 1, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+        
+        if self.option_var.get() == "Salary":
+            self.ErrorHandle = self.Adder.update_records(1, 2, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")            
+
+        if self.option_var.get() == "Team":
+            self.ErrorHandle = self.Adder.update_records(1, 6, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+
+        if self.option_var.get() == "Age":
+            self.ErrorHandle = self.Adder.update_records(1, 3, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+
+        if self.option_var.get() == "Sport":
+            self.ErrorHandle = self.Adder.update_records(1, 4, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+
+        if self.option_var.get() == "Number of Trophies":
+            self.ErrorHandle = self.Adder.update_records(1, 5, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+
+class Update_Team(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.menu_options = ('Name', 'Number of Trophies')
+        self.option_var = tk.StringVar(self)
+        self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
+
+        label = tk.Label(self, text="Update Team Information", font=self.controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        button1 = tk.Button(self, text="Back",
+                           command=lambda: controller.show_frame("PageTwo"))
+        button1.pack()
+
+        label2 = tk.Label(self, text="What Aspect Would you like to Change?", font=self.controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.TeamOptionChanged
+        )
+        option_menu.pack()
+
+        label1 = tk.Label(self, text="Type The Name Of The Team You Would Like To Update", font=self.controller.Subsection_font)
+        label1.pack()
+
+        self.EnterName = tk.Entry(self)
+        self.EnterName.pack()
+
+        label3 = tk.Label(self, text="Type Your New Value Here", font=self.controller.Subsection_font)
+        label3.pack()
+
+        self.EnterValue = tk.Entry(self)
+        self.EnterValue.pack()
+
+        button2 = tk.Button(self, text="Enter", command=self.UpdateEnterPressed)
+        button2.pack()
+    
+    def TeamOptionChanged(self, *args):
+        pass
+
+    def UpdateEnterPressed(self, *args):
+        if self.option_var.get() == "Name":
+            self.ErrorHandle = self.Adder.update_records(2, 1, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+        
+        if self.option_var.get() == "Number of Trophies":
+            self.ErrorHandle = self.Adder.update_records(2, 2, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")            
+    
+
+class Update_Award(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.menu_options = ('Most Recent Player Winner','Most Recent Team Winner')
+        self.option_var = tk.StringVar(self)
+        self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
+
+        label = tk.Label(self, text="Update Award Information", font=self.controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        button1 = tk.Button(self, text="Back",
+                           command=lambda: controller.show_frame("PageTwo"))
+        button1.pack()
+
+        label2 = tk.Label(self, text="What Aspect Would you like to Change?", font=self.controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.AwardOptionChanged
+        )
+        option_menu.pack()
+
+        label1 = tk.Label(self, text="Type The Name Of The Award You Would Like To Update", font=self.controller.Subsection_font)
+        label1.pack()
+
+        self.EnterName = tk.Entry(self)
+        self.EnterName.pack()
+
+        label3 = tk.Label(self, text="Type Your New Value Here", font=self.controller.Subsection_font)
+        label3.pack()
+
+        self.EnterValue = tk.Entry(self)
+        self.EnterValue.pack()
+
+        button2 = tk.Button(self, text="Enter", command=self.UpdateEnterPressed)
+        button2.pack()
+
+    def AwardOptionChanged(self, *args):
+        pass
+
+    def UpdateEnterPressed(self, *args):
+
+        if self.option_var.get() == "Most Recent Player Winner":
+            self.ErrorHandle = self.Adder.update_records(4, 1, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")
+        
+        if self.option_var.get() == "Most Recent Team Winner":
+            self.ErrorHandle = self.Adder.update_records(4, 2, self.EnterValue.get(), self.EnterName.get(), "")
+            self.controller.show_frame("PageTwo")    
+
+class Update_Game(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.menu_options = ('Team 1 Score','Team 2 Score','Outcome')
+        self.option_var = tk.StringVar(self)
+        self.Adder = AddObjects.AddObjects()
+        self.ErrorHandle = tk.StringVar(self)
+
+        label = tk.Label(self, text="Update Game Information", font=self.controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        button1 = tk.Button(self, text="Back",
+                           command=lambda: controller.show_frame("PageTwo"))
+        button1.pack()
+
+        label2 = tk.Label(self, text="What Aspect Would you like to Change?", font=self.controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.GameOptionChanged
+        )
+        option_menu.pack()
+
+        label1 = tk.Label(self, text="Type The Names Of The Teams Who Played (You will only update their most recent game)", font=self.controller.Subsection_font)
+        label1.pack()
+
+        self.EnterName = tk.Entry(self)
+        self.EnterName.pack()
+
+        self.EnterName2 = tk.Entry(self)
+        self.EnterName2.pack()
+
+        label3 = tk.Label(self, text="Type Your New Value Here", font=self.controller.Subsection_font)
+        label3.pack()
+
+        self.EnterValue = tk.Entry(self)
+        self.EnterValue.pack()
+
+        button2 = tk.Button(self, text="Enter", command=self.UpdateEnterPressed)
+        button2.pack()
+
+    def GameOptionChanged(self, *args):
+        pass
+
+    def UpdateEnterPressed(self, *args):
+
+        if self.option_var.get() == "Team 1 Score":
+            self.ErrorHandle = self.Adder.update_records(3, 1, self.EnterValue.get(), self.EnterName.get(), self.EnterName2.get())
+            self.controller.show_frame("PageTwo")
+        
+        if self.option_var.get() == "Team 2 Score":
+            self.ErrorHandle = self.Adder.update_records(3, 2, self.EnterValue.get(), self.EnterName.get(), self.EnterName2.get())
+            self.controller.show_frame("PageTwo") 
+        
+        if self.option_var.get() == "Outcome":
+            self.ErrorHandle = self.Adder.update_records(3, 3, self.EnterValue.get(), self.EnterName.get(), self.EnterName2.get())
+            self.controller.show_frame("PageTwo") 
+        
 
 class PageThree(tk.Frame):
 
@@ -193,7 +501,6 @@ class PageThree(tk.Frame):
         
         if self.option_var.get() == "Game":
             self.controller.show_frame("Add_Game")
-
 
 class PageFour(tk.Frame):
 
@@ -257,10 +564,7 @@ class PageFour(tk.Frame):
             label8 = tk.Label(self, text="Invalid Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
-            del self.Adder
             self.controller.show_frame("StartPage")
-
-
 
 class Add_Athlete(tk.Frame):
 
@@ -329,7 +633,7 @@ class Add_Athlete(tk.Frame):
             label8 = tk.Label(self, text="Invalid Team Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
-            del self.Adder
+            
             self.controller.show_frame("PageThree")
 
 class Add_League(tk.Frame):
@@ -376,7 +680,7 @@ class Add_League(tk.Frame):
     
     def EnterLeagueInfo(self, *args):
         self.Adder.Insert_League(self.EnterName.get(), self.EnterSport.get(), self.EnterCounrty.get())
-        del self.Adder
+        
         self.controller.show_frame("PageThree")
 
 class Add_Game(tk.Frame):
@@ -440,7 +744,7 @@ class Add_Game(tk.Frame):
             label8 = tk.Label(self, text="Invalid Team Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
-            del self.Adder
+            
             self.controller.show_frame("PageThree")
 
 class Add_Award(tk.Frame):
@@ -505,9 +809,8 @@ class Add_Award(tk.Frame):
             label8 = tk.Label(self, text="Invalid Team, Player or League Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
-            del self.Adder
-            self.controller.show_frame("PageThree")
-        
+            
+            self.controller.show_frame("PageThree")     
 
 class Add_Team(tk.Frame):
 
@@ -559,9 +862,18 @@ class Add_Team(tk.Frame):
             label8 = tk.Label(self, text="Invalid League Name", font=self.controller.Subsection_font)
             label8.pack()
         else:
-            del self.Adder
             self.controller.show_frame("PageThree")
 
+class AboutPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label = tk.Label(self, text="About This System", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
 
 if __name__ == "__main__":
     app = SampleApp()
