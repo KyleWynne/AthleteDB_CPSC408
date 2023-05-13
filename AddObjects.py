@@ -91,7 +91,6 @@ class AddObjects:
         num = int(table)
         try:
             if num == 1:
-                #print("Deleting from players")
                 id = self.findID(1, id)
                 if id == "invalid input":
                     return "invalid input"
@@ -104,7 +103,6 @@ class AddObjects:
                     self.execute_insert(query)
 
             if num == 2:
-                #print("deleting from teams")
                 id = self.findID(2, id)
                 if id == "invalid input":
                     return "invalid input"
@@ -124,7 +122,6 @@ class AddObjects:
                     self.execute_insert("COMMIT;")
 
             if num == 3:
-                #print("Deleting from games")
                 id = self.findID(2, id)
                 id2 = self.findID(2, id2)
                 if id == "invalid input":
@@ -139,7 +136,6 @@ class AddObjects:
 
                     self.execute_insert(query)
             if num == 4:
-                #print("Deleting from trophies")
                 id = self.findID(4, id)
                 if id == "invalid input":
                     return "invalid input"
@@ -197,15 +193,6 @@ class AddObjects:
         tuple = self.find_table_tuple(opt, old, old2)
         id = str(tuple[0][0])
         if opt == 1:
-            # print("What would you like to change")
-            # print('''
-            # 1. player Name
-            # 2. yearly salary
-            # 3. age in years
-            # 4. sport
-            # 5. number of trophies
-            # 6. Team 
-            # ''')
             if num == 1:
                 att = "player_name"
             if num == 2:
@@ -225,13 +212,6 @@ class AddObjects:
             SET ''' + att + " = '" + str(value) + ''''
             WHERE playerID = ''' + str(id) + ";"
         if opt == 2:
-            # print("What would you like to change")
-            # print('''
-            # 1. Team Name
-            # 2. number of trophies
-            # ''')
-            # num = int(input())
-            # value = input("Enter new value: ")
             if num == 1:
                 att = "team_name"
             if num == 2:
@@ -241,14 +221,6 @@ class AddObjects:
             SET """ + att + " = '" + str(value) + """'
             WHERE teamID = """ + str(id) + ";"
         if opt == 3:
-            # print("What would you like to change")
-            # print('''
-            # 1. Team1 score
-            # 2. Team2 score
-            # 3. outcome
-            # ''')
-            # num = int(input())
-            #value = input("Enter new value: ")
             if num == 1:
                 att = "team1_score"
             if num == 2:
@@ -260,13 +232,6 @@ class AddObjects:
             SET ''' + att + " = '" + str(value) + """'
             WHERE gameID = """ + str(id) + ";"
         if opt == 4:
-            # print("What would you like to change")
-            # print('''
-            # 1. Most recent player winner
-            # 2. Most recent team winner
-            # ''')
-            # num = int(input())
-            # value = input("Enter new value: ")
             if num == 1:
                 att = "player_winner_id"
                 value = self.findID(1,value)
@@ -294,7 +259,7 @@ class AddObjects:
             self.execute_insert(query1)
             self.execute_insert(query2)
             self.execute_insert("COMMIT;")
-            
+
         else:
 
             self.execute_insert(query)
