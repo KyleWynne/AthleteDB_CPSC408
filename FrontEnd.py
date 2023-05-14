@@ -882,6 +882,46 @@ class AboutPage(tk.Frame):
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
 
+        label1 = tk.Label(self, text="How to Insert:", font=controller.Subsection_font)
+        label1.pack()
+
+        label3 = tk.Label(self, text="There is a hierarchy for inserting league->team->player,awards,games ", font=controller.Info_font)
+        label3.pack()
+
+        label4 = tk.Label(self, text="this is because for a player to be on a team or a team to be in a league that object must already exist", font=controller.Info_font)
+        label4.pack()
+
+        label5 = tk.Label(self, text="How to Search:", font=controller.Subsection_font)
+        label5.pack()
+
+        label6 = tk.Label(self, text="There are two types: a normal and fancy search", font=controller.Info_font)
+        label6.pack()
+
+        label7 = tk.Label(self, text="a classic will retuen one record while the fancy searches are more specific and can return many records", font=controller.Info_font)
+        label7.pack()
+
+        label8 = tk.Label(self, text="for view all records and fancy search sometimes the output doesnt show up till a second search is also used", font=controller.Info_font)
+        label8.pack()
+
+        label9 = tk.Label(self, text="How to Delete:", font=controller.Subsection_font)
+        label9.pack()
+
+        label10 = tk.Label(self, text="you can delete a record by typing the name, if the page does not change then that record could not be found", font=controller.Info_font)
+        label10.pack()
+
+        label11 = tk.Label(self, text="How to Update:", font=controller.Subsection_font)
+        label11.pack()
+
+        label12 = tk.Label(self, text="you can update a record by typing the name, but you cannot update a league's information", font=controller.Info_font)
+        label12.pack()
+
+        label13 = tk.Label(self, text="How to Export:", font=controller.Subsection_font)
+        label13.pack()
+
+        label14 = tk.Label(self, text="you can choose a table and hit export to have a csv file made in the current directory with all the values in that table", font=controller.Info_font)
+        label14.pack()
+
+
 class view(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -1065,7 +1105,6 @@ class fancy_search(tk.Frame):
 
             self.listbox=tk.Listbox(self)
             for item in self.langs:
-                print(item)
                 self.listbox.insert(tk.END, item)
             self.listbox.pack()
 
