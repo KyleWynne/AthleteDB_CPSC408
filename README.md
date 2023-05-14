@@ -5,7 +5,7 @@ Thomas Gooding
 Luc Rieffel
 Peter Senko
 
-#instructions
+# instructions
 run FrontEnd.py
 interact with the tkinter interface for all functions
 find different quirks and proper use instructions on the "About Page"
