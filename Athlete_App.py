@@ -98,9 +98,16 @@ def create_all_tables():
     CREATE INDEX team_index ON teams(teamID);
     CREATE INDEX player_index ON players(playerID);"""
     #execute_insert(query6)
-    query7 = """
 
+    query7 = """
+        CREATE VIEW IF NOT EXISTS allPlayers AS
+        SELECT players.teamID AS TID, players.player_name, players.salary, players.age, players.sport, players.trophies, teams.teamID, teams.team_name
+        FROM players
+        INNER JOIN teams
+        ON players.teamID = teams.teamID;
     """
+    execute_insert(query7)
+
 
 def destructor(self): #commit changes and close connection
         self.connection.close()
