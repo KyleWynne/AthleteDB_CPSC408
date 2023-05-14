@@ -8,9 +8,9 @@ import csv
 #connect to mysql
 conn = mysql.connector.connect(host="localhost",
                                user="root",
-                               password="P.anthony723",
+                               password="cpsc408",
                                auth_plugin='mysql_native_password',
-                               database="AthleteDB")
+                               database="Athlete")
 
 cur_obj = conn.cursor()
 
@@ -100,13 +100,13 @@ def create_all_tables():
     #execute_insert(query6)
 
     query7 = """
-        CREATE VIEW IF NOT EXISTS allPlayers AS
+        CREATE VIEW allPlayers AS
         SELECT players.teamID AS TID, players.player_name, players.salary, players.age, players.sport, players.trophies, teams.teamID, teams.team_name
         FROM players
         INNER JOIN teams
         ON players.teamID = teams.teamID;
     """
-    execute_insert(query7)
+    #execute_insert(query7)
 
 
 def destructor(self): #commit changes and close connection
@@ -489,5 +489,5 @@ def startscreen():
             break
 
 #main program
-#startscreen()
-insert_records()
+startscreen()
+#insert_records()
