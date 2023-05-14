@@ -409,7 +409,6 @@ class AddObjects:
 
     def query_data(self, action, data): # queries data with parameters/filters
         #uses a subquery and aggregation
-        print(data)
         if action == 1: 
             #return the names of all players who have won a trophy the same year as a specific player
             query = """
