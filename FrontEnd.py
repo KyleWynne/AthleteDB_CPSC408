@@ -27,7 +27,7 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, Add_Team, Add_Athlete, Add_Award, Add_League, Add_Game, AboutPage, Update_Game, Update_Team, Update_Athlete, Update_Award):
+        for F in (StartPage, PageOne, PageTwo, PageThree, PageFour, Add_Team, Add_Athlete, Add_Award, Add_League, Add_Game, AboutPage, Update_Game, Update_Team, Update_Athlete, Update_Award, view, export, fancy_search):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -60,13 +60,22 @@ class StartPage(tk.Frame):
                             command=lambda: controller.show_frame("PageThree"))
         button4 = tk.Button(self, text="Delete Page", 
                             command=lambda: controller.show_frame("PageFour")) 
+        button6 = tk.Button(self, text="View All", 
+                            command=lambda: controller.show_frame("view")) 
+        button7 = tk.Button(self, text="Export", 
+                            command=lambda: controller.show_frame("export"))
         button5 = tk.Button(self, text="About Page", 
                             command=lambda: controller.show_frame("AboutPage"))     
+        button8 = tk.Button(self, text="Fancy Search", 
+                            command=lambda: controller.show_frame("fancy_search")) 
 
         button1.pack()
+        button8.pack()
         button2.pack()
         button3.pack()
         button4.pack()
+        button6.pack()
+        button7.pack()        
         button5.pack()
 
 class PageOne(tk.Frame):
@@ -323,8 +332,7 @@ class Update_Team(tk.Frame):
         
         if self.option_var.get() == "Number of Trophies":
             self.ErrorHandle = self.Adder.update_records(2, 2, self.EnterValue.get(), self.EnterName.get(), "")
-            self.controller.show_frame("PageTwo")            
-    
+            self.controller.show_frame("PageTwo")               
 
 class Update_Award(tk.Frame):
 
@@ -451,7 +459,6 @@ class Update_Game(tk.Frame):
             self.ErrorHandle = self.Adder.update_records(3, 3, self.EnterValue.get(), self.EnterName.get(), self.EnterName2.get())
             self.controller.show_frame("PageTwo") 
         
-
 class PageThree(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -874,6 +881,215 @@ class AboutPage(tk.Frame):
         button = tk.Button(self, text="Start Page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+
+class view(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+
+        self.menu_options = ('Athlete','League','Team','Team Award', 'Player Award')
+        self.option_var = tk.StringVar(self)
+        self.KeyValue = tk.StringVar(self)
+        self.KeyName = tk.StringVar(self)
+
+        label = tk.Label(self, text="Search Through our System!", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        label2 = tk.Label(self, text ="View all records For?", font=controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.optionC
+        )
+        option_menu.pack()
+
+        self.output_label = tk.Label(self, font=controller.Info_font)
+        self.output_label.pack()
+
+        button3 = tk.Button(self, text="Search", command=self.viewall)
+        button3.pack()
+
+
+    def optionC(self, *args):
+        pass
+
+    def viewall(self, *args):
+        if self.option_var.get() == 'Athlete':
+            self.langs = self.Adder.dataClean(1)
+
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+        if self.option_var.get() == 'League':
+            self.langs = self.Adder.dataClean(3)
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+        if self.option_var.get() == 'Team':
+            self.langs = self.Adder.dataClean(2)
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+        if self.option_var.get() == 'Team Award':
+            self.langs = self.Adder.dataClean(5)
+
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+        if self.option_var.get() == 'Player Award':
+            self.langs = self.Adder.dataClean(4)
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+class export(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+
+        self.menu_options = ('Athlete','League','Team','Award', 'Game')
+        self.option_var = tk.StringVar(self)
+        self.KeyValue = tk.StringVar(self)
+        self.KeyName = tk.StringVar(self)
+
+        label = tk.Label(self, text="Search Through our System!", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        label2 = tk.Label(self, text ="Export all records For?", font=controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.optionC
+        )
+        option_menu.pack()
+
+        self.output_label = tk.Label(self, font=controller.Info_font)
+        self.output_label.pack()
+
+        button3 = tk.Button(self, text="Export", command=self.viewall)
+        button3.pack()
+
+
+    def optionC(self, *args):
+        pass
+
+    def viewall(self, *args):
+        if self.option_var.get() == 'Athlete':
+            self.Adder.export(1)
+
+        if self.option_var.get() == 'League':
+            self.Adder.export(3)
+
+        if self.option_var.get() == 'Team':
+            self.Adder.export(2)
+
+        if self.option_var.get() == 'Award':
+            self.Adder.export(4)
+
+        if self.option_var.get() == 'Game':
+            self.Adder.export(5)
+
+class fancy_search(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.Adder = AddObjects.AddObjects()
+
+        self.menu_options = ('return the names of all players who have won a trophy the same year as a specific player','total number of trophies won by each team given a sport','given a league name find the names of all players who have won trophies')
+        self.option_var = tk.StringVar(self)
+        self.KeyValue = tk.StringVar(self)
+        self.KeyName = tk.StringVar(self)
+
+        label = tk.Label(self, text="Search Through our System with specific filters!", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+
+        button = tk.Button(self, text="Start Page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button.pack()
+
+        label2 = tk.Label(self, text ="Select a Query Filter", font=controller.Subsection_font)
+        label2.pack()
+
+        option_menu = tk.OptionMenu(
+            self,
+            self.option_var,
+            *self.menu_options,
+            command=self.optionC
+        )
+        option_menu.pack()
+
+        self.output_label = tk.Label(self, text="Enter Query Value Here:", font=controller.Info_font)
+        self.output_label.pack()
+
+        self.EnterName = tk.Entry(self,)
+        self.EnterName.pack()
+
+        button3 = tk.Button(self, text="Search", command=self.viewall)
+        button3.pack()
+
+
+    def optionC(self, *args):
+        pass
+
+    def viewall(self, *args):
+        if self.option_var.get() == 'return the names of all players who have won a trophy the same year as a specific player':
+            self.langs = self.Adder.query_data(1, self.EnterName.get())
+
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                print(item)
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+        # if self.option_var.get() == 'given a trophy name find all information':
+        #     self.langs = self.Adder.query_data(2, self.EnterName.get())
+        #     self.listbox=tk.Listbox(self)
+        #     for item in self.langs:
+        #         self.listbox.insert(tk.END, item)
+        #     self.listbox.pack()
+
+        if self.option_var.get() == 'total number of trophies won by each team given a sport':
+            self.langs = self.Adder.query_data(3, self.EnterName.get())
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
+
+        if self.option_var.get() == 'given a league name find the names of all players who have won trophies':
+            self.langs = self.Adder.query_data(4, self.EnterName.get())
+
+            self.listbox=tk.Listbox(self)
+            for item in self.langs:
+                self.listbox.insert(tk.END, item)
+            self.listbox.pack()
 
 if __name__ == "__main__":
     app = SampleApp()

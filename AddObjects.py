@@ -3,6 +3,7 @@ from helper import helper
 import re
 import string
 from datetime import date
+import csv
 
 class AddObjects:
 
@@ -320,3 +321,138 @@ class AddObjects:
             WHERE ('''+teamID1+''' OR '''+teamID2+''' = 4)
             AND ('''+teamID1+''' OR '''+teamID2+''' = 3);'''
             return self.query_returnOne(query)
+
+    def view_all_records(self, Op): # prints all records in a table
+        #enforces joins accross at least 3 tables(teams, leauges, games)
+        if Op == 1:
+            query = '''
+            SELECT *
+            FROM allPlayers;
+            '''
+            #query that created the view
+            viewq = '''
+            CREATE VIEW allPlayers AS
+                SELECT players.teamID AS TID, players.player_name, players.salary, players.age, players.sport, players.trophies, teams.teamID, teams.team_name
+                FROM players
+                INNER JOIN teams
+                ON players.teamID = teams.teamID;'''
+        if Op == 2:
+            query = '''
+            SELECT *
+            FROM teams
+            INNER JOIN leagues l on teams.leagueID = l.leagueID;
+            '''
+        if Op == 3:
+            query = '''
+            SELECT *
+            FROM leagues;'''
+        if Op == 4:
+            query = '''
+            SELECT *
+            FROM trophies
+            INNER JOIN players p on trophies.player_winner_id = p.playerID
+            WHERE playerID != 1;'''
+        if Op == 5:
+            query = """
+            SELECT *
+            FROM trophies
+            INNER JOIN teams t on trophies.team_winner_id = t.teamID
+            WHERE teamID !=1;
+            """
+        self.cur_obj.execute(query)
+        return self.cur_obj.fetchall()
+    
+    def dataClean(self, Op):
+        datalist = self.view_all_records(Op)
+        return datalist
+
+    def export(self, Op):
+        if Op == 1:
+            query = '''
+            SELECT *
+            FROM players;'''
+            filename = "players.csv"
+        if Op == 2:
+            query = '''
+            SELECT *
+            FROM teams;
+            '''
+            filename = "teams.csv"
+        if Op == 3:
+            query = '''
+            SELECT *
+            FROM leagues;'''
+            filename = "leagues.csv"
+        if Op == 4:
+            query = '''
+            SELECT *
+            FROM trophies;'''
+            filename = "trophies.csv"
+        if Op == 5:
+            query = """
+            SELECT *
+            FROM games;
+            """
+            filename = "games.csv"
+        self.cur_obj.execute(query)
+        allvalues = self.cur_obj.fetchall()
+
+        file = open(filename, 'w')
+
+        for line in allvalues:
+            temp = str(line)
+            temp = temp.replace('(', '')
+            temp = temp.replace(')', '\n')
+            file.write(temp)
+        
+        file.close()
+
+    def query_data(self, action, data): # queries data with parameters/filters
+        #uses a subquery and aggregation
+        print(data)
+        if action == 1: 
+            #return the names of all players who have won a trophy the same year as a specific player
+            query = """
+            SELECT DISTINCT p1.player_name
+            FROM players p1
+            JOIN trophies t1 ON p1.playerID = t1.player_winner_id
+            WHERE t1.year IN (
+                SELECT t2.year
+                FROM trophies t2
+                JOIN players p2 ON t2.player_winner_id = p2.playerID
+                WHERE p2.player_name = \'"""+data+"""\'
+            )
+            """
+
+        # if action == 2:
+        #     #given a trophy name find all information
+        #     trophy = data
+        #     query = """
+        #     SELECT *
+        #     FROM trophies
+        #     WHERE trophy_name = """+trophy+" GROUP BY trophy_name;"
+
+        if action == 3:
+            #total number of trophies won by each team given a sport
+            query = '''
+            SELECT teams.team_name, SUM(trophies.trophyID) AS total_trophies
+            FROM teams
+            JOIN trophies ON teams.teamID = trophies.team_winner_id
+            JOIN leagues ON trophies.leagueID = leagues.leagueID
+            WHERE leagues.sport = \''''+data+'''\'
+            GROUP BY teams.team_name; 
+            '''
+
+        if action == 4:
+            #given a league name find the names of all players who have won trophies
+            query = '''
+            SELECT DISTINCT players.player_name
+            FROM players
+            JOIN trophies ON players.playerID = trophies.player_winner_id
+            JOIN leagues ON trophies.leagueID = leagues.leagueID
+            WHERE leagues.league_name = \''''+data+'''\';
+            '''
+        
+        self.cur_obj.execute(query)
+        out = self.cur_obj.fetchall()
+        return out
