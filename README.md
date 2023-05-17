@@ -7,9 +7,13 @@ Peter Senko
 
 # instructions
 run FrontEnd.py
-interact with the tkinter interface for all functions \n
-find different quirks and proper use instructions on the "About Page" \n
-The only place you will need to alter the root password is the AddObjects.py file \n
+interact with the tkinter interface for all functions,
+find different quirks and proper use instructions on the "About Page",
+The only place you will need to alter the root password is the AddObjects.py file,
+the database dump is in a file called data-dump.sql I looked through and saw our view mentioned but I do not know if it'll build correctly
+
+# dataset
+The dataset was built by us, we attempted to have an AI build a dataset but it would not build anything accurate or usable so we abandoned the AI and found the data ourselves
 
 # Sources
 https://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter  
