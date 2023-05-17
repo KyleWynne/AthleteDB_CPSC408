@@ -7,8 +7,9 @@ Peter Senko
 
 # instructions
 run FrontEnd.py
-interact with the tkinter interface for all functions
-find different quirks and proper use instructions on the "About Page"
+interact with the tkinter interface for all functions \n
+find different quirks and proper use instructions on the "About Page" \n
+The only place you will need to alter the root password is the AddObjects.py file \n
 
 # Sources
 https://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter  
