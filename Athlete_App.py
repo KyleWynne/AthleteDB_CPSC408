@@ -1,3 +1,4 @@
+#this code does not run when using the app this code was made solely for development and debugging features of the app
 import mysql.connector
 from helper import helper
 import re
