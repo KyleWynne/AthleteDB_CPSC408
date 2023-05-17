@@ -25,3 +25,4 @@ https://stackoverflow.com/questions/15495559/taking-input-from-the-user-in-tkint
 https://docs.python.org/3/library/tkinter.html
 https://realpython.com/python-gui-tkinter/
 https://www.geeksforgeeks.org/python-tkinter-entry-widget/
+helper.py from class
